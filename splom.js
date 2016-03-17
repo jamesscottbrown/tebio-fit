@@ -21,7 +21,7 @@ var yAxis = d3.svg.axis()
 
 var color = d3.scale.category10();
 
-d3.csv("pop1.csv", function(error, data) {
+d3.csv(path+"scatterplot.csv", function(error, data) {
   if (error) throw error;
 
   var domainByTrait = {},

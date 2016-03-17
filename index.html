@@ -12,7 +12,7 @@
 
     <title>Single Network Visualisations</title>
 
-    <link rel="stylesheet" href="bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap/3.3.6/css/bootstrap.css">
     <link rel="stylesheet" href="starter-template.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -49,16 +49,33 @@
 
         <p class="lead">This page summarises the dynamics of a single network.</p>
 
+        <script> var path = "data/mock1/"; </script> 
+
+        <h2> Network </h2>
+        <img id=networkPlaceholder></img>
+
+        <h2>Amplitude/Frequency Characteristics </h2>
+
+        <h2> Mathematical model </h2>
+
+        SBML download link
+
+        <h2> Posterior Distribution </h2>
+
 
         <link rel="stylesheet" type="text/css" href="site.css">
         <script src="http://d3js.org/d3.v3.min.js"></script>
         <script src="splom.js"></script>
 
 
+        <h2>Simulation Trajectory</h2>
+        
       </div>
 
     </div><!-- /.container -->
 
+
+    <script> document.getElementById('networkPlaceholder').src= path + "network.png"; </script>
 
   </body>
 </html>
