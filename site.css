@@ -30,7 +30,7 @@ circle {
   fill-opacity: .7;
 }
 
-circle.hidden {
+circle.not-selected {
   fill: #ccc !important;
 }
 

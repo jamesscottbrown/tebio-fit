@@ -17,6 +17,13 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+
+        <link rel="stylesheet" type="text/css" href="site.css">
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="splom.js"></script>
+
+
   </head>
 
   <body>
@@ -49,7 +56,8 @@
 
         <p class="lead">This page summarises the dynamics of a single network.</p>
 
-        <script> var path = "data/mock1/"; </script> 
+        <script> // var path = "data/mock1/"; </script> 
+
 
         <h2> Network </h2>
         <img id=networkPlaceholder></img>
@@ -57,25 +65,93 @@
         <h2>Amplitude/Frequency Characteristics </h2>
 
         <h2> Mathematical model </h2>
+        The model can be downloaded in SBML format: <a href id="sbml_link"></a>
 
-        SBML download link
+        <div id="paramTable"></div>
+
+
+
 
         <h2> Posterior Distribution </h2>
+        <div id="epsilons">Epsilon values: </div>
 
+        
+        <div id="splom"></div>
 
-        <link rel="stylesheet" type="text/css" href="site.css">
-        <script src="http://d3js.org/d3.v3.min.js"></script>
-        <script src="splom.js"></script>
+        <p>This is a matrix of scatterplots of samples from the posterior distribution.</p>
 
+        <p>If uniform priors are applied, the axes are scaled to the range of the prior. The proportion of the area covered by the samples thus gives an indication of the <i>factor by which uncertainty in the parameters has been reduced</i>.</p>  
 
         <h2>Simulation Trajectory</h2>
-        
+
       </div>
 
     </div><!-- /.container -->
 
 
-    <script> document.getElementById('networkPlaceholder').src= path + "network.png"; </script>
+    <script> 
+
+
+      var experiment; var model; var modelName; var path; var global_data;
+
+      // Function from http://stackoverflow.com/a/979996
+      function getUrlVars() {
+          var vars = {};
+          var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,    
+          function(m,key,value) {
+            vars[key] = value;
+          });
+          return vars;
+        }
+
+      function getModelDetails( callback ){
+
+        console.log("In getModelDetails");
+        experiment = getUrlVars()["experiment"];
+        experiment = experiment ? experiment : "mock1";
+        modelName =  getUrlVars()["model"];
+        path = "data/" + experiment + "/"; 
+
+
+        console.log("about to JSON");
+        d3.json(path+"setup.json", function(d){
+          console.log(d);
+          global_data = d;
+          model = global_data.models.filter( function(x){ return x.model_name == modelName }  )[0];
+          callback();
+        })
+
+      };
+
+
+
+
+      function setup_page(){
+        console.log("in setup_page");
+        getModelDetails( fill_placeholders );
+      }
+
+      function fill_placeholders(){
+        console.log("in fill_placeholders");
+        console.log(model)
+
+        sbml_name = model.model_name;
+        document.getElementById('networkPlaceholder').src = path + model.model_image; 
+
+        document.getElementById('sbml_link').href = path + model.sbml_name;
+        document.getElementById('sbml_link').innerText = model.sbml_name;
+
+        listEpsilons();
+        paramTable();
+
+        plotSPLOM( form_url_for_population(1) );
+        d3.select("#epsilons").selectAll("button").filter(function(d){ return d == global_data.epsilon_schedule[0] }).classed("active", true)
+    };
+
+    window.onLoad = setup_page();
+
+    </script>
+
 
   </body>
 </html>
