@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Single Network Visualisations</title>
+
+    <link rel="stylesheet" href="bootstrap/3.3.6/css/bootstrap.css">
+    <link rel="stylesheet" href="starter-template.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+
+    <link rel="stylesheet" type="text/css" href="site.css">
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="splom.js"></script>
+
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Project name</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
+<div class="container">
+
+    <div class="starter-template">
+        <h1>Single Network Visualisations</h1>
+
+        <p class="lead">This page compares several candidate models.</p>
+
+        <div id="models"></div>
+
+        <div id="modelLikelihood"></div>
+
+    </div>
+
+</div><!-- /.container -->
+
+
+<script>
+
+
+    var experiment;
+    var model;
+    var modelName;
+    var path;
+    var global_data;
+
+    // Function from http://stackoverflow.com/a/979996
+    function getUrlVars() {
+        var vars = {};
+        var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,
+                function (m, key, value) {
+                    vars[key] = value;
+                });
+        return vars;
+    }
+
+    function getModelDetails(callback) {
+
+        experiment = getUrlVars()["experiment"];
+        experiment = experiment ? experiment : "mock1";
+        //modelName =  getUrlVars()["model"];
+        path = "data/" + experiment + "/";
+
+
+        d3.json(path + "setup.json", function (d) {
+            global_data = d;
+            //model = global_data.models.filter( function(x){ return x.model_name == modelName }  )[0];
+            callback();
+        })
+
+    }
+    ;
+
+
+    function setup_page() {
+        getModelDetails(fill_placeholders);
+    }
+
+    function fill_placeholders() {
+        summariseModelTable();
+    }
+    ;
+
+    function summariseModelTable() {
+
+        var sections = d3.select('#models')
+                .selectAll("div")
+                .data(global_data.models)
+                .enter()
+                .append("div");
+
+        sections
+                .append('h3')
+                .text(function (d) {
+                    return d.model_name;
+                });
+
+        sections
+                .append('img')
+                .attr('src', function (d) {
+                    return path + d.model_image;
+                });
+
+
+        // plot graph
+
+
+        var dataURL = path + "ModelDistribution.txt";
+        d3.text(dataURL, function (error, rawData) {
+            if (error) throw error;
+
+            var dsv = d3.dsv(" ", "text/plain");
+            parsedData = dsv.parseRows(rawData);
+
+
+            var width = 480,
+                    size = 230,
+                    padding = 20,
+                    bar_thickness = 20
+                    height = bar_thickness * parsedData.length;
+
+            var x = d3.scale.linear()
+                    .range([0, width])
+                    .domain([0, 1]);
+
+            var y = d3.scale.linear()
+                    .range([0,height - bar_thickness])
+                    .domain([0, parsedData[0].length]);
+
+            var color = d3.scale.category10()
+                    .domain([0, parsedData[0].length]);
+
+            var svg = d3.select('#modelLikelihood').append('svg')
+                    .attr("width", width + 100);
+
+            var xAxis = d3.svg.axis()
+                    .scale(x)
+                    .orient("bottom")
+                    .ticks(5);
+
+
+            // reformat data, so that each bar can work out its position as well as length
+
+            var data = []; data.push([]);
+
+            for (var i=0; i < parsedData.length; i++) {
+                data[i] = [];
+                for (var j = 0; j < parsedData[i].length; j++) {
+                    if (parsedData[i][j] == "" ){ continue; }
+                    tmp = [];
+                    tmp["val"] = Number(parsedData[i][j]);
+
+                    if (j == 0) {
+                        tmp["cumSum"] = 0;
+                    } else {
+                        tmp["cumSum"] = data[i][j - 1].cumSum + Number(parsedData[i][j-1]);
+                    }
+
+                    tmp["row"] = i;
+                    data[i][j] = tmp;
+                }
+            }
+
+
+                var row = svg.selectAll(".row")
+                    .data(data)
+
+                    .enter().append("g")
+                    .attr("class", "g")
+
+                    .attr('transform', function (d, i) {
+                        return "translate(0," + y(i) + ")";
+                    });
+
+
+            row.selectAll("rect")
+                    .data(function (d, i) {
+                        return d;
+                    })
+                    .enter()
+                    .append('rect')
+                    .attr('x', function (d, i) {
+                        console.log(d.val + "," + d.cumSum);
+                        return x(d.cumSum);
+                    })
+                    .attr('width', function (d,i){ return x(d.val); } )
+                    .attr('height', 20)
+                    .style('fill', function (d, i) {
+                        return color(i);
+                    });
+
+
+
+            row.selectAll("text")
+                    .data(function (d,i){return d;})
+                    .enter()
+                    .append("text")
+                    .text( function(d,i){ console.log("Row: " + d.row); return global_data.epsilon_schedule[d.row]; } )
+                    .attr("y", bar_thickness/2)
+                    .attr("x", width + 5)
+
+            svg.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + (height + 20) + ")")
+                    .call(xAxis);
+
+
+        })
+    }
+
+    window.onLoad = setup_page();
+
+</script>
+
+<style>
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+
+    .x.axis path {
+        display: none;
+    }
+</style>
+
+</body>
+</html>
