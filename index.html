@@ -54,10 +54,7 @@
       <div class="starter-template">
         <h1>Single Network Visualisations</h1>
 
-        <p class="lead">This page summarises the dynamics of a single network.</p>
-
-        <script> // var path = "data/mock1/"; </script> 
-
+        <p class="lead">This page summarises the dynamics of a single network. For an overview of the candidate models, see the <a onclick="redirectToOverview();">overview page</a></p>
 
         <h2> Network </h2>
         <img id=networkPlaceholder></img>
@@ -89,10 +86,12 @@
     </div><!-- /.container -->
 
 
-    <script> 
-
-
+    <script>
       var experiment; var model; var modelName; var path; var global_data;
+
+      function redirectToOverview(){
+        return window.location.href = window.location.href.split("?")[0].replace("index.html", "comparison.html") + "?experiment=" + getUrlVars()["experiment"];
+      }
 
       // Function from http://stackoverflow.com/a/979996
       function getUrlVars() {
@@ -141,7 +140,6 @@
         plotSPLOM( form_url_for_population(1) );
         d3.select("#epsilons").selectAll("button").filter(function(d){ return d == global_data.epsilon_schedule[0] }).classed("active", true)
 
-        console.log("Handline epsilon")
         var epsilon = getUrlVars()["epsilon"];
         if (epsilon){
           var ind = global_data.epsilon_schedule.indexOf(Number(epsilon));
