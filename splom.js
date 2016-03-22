@@ -40,7 +40,7 @@ function paramTable( ){
 }
 
 function selectEpsilon(d, i){
-    console.log(d,i);
+    console.log(i);
 
     d3.select('#epsilons').selectAll("button").classed("active", false);
     d3.select(this).classed("active", true);
@@ -48,6 +48,17 @@ function selectEpsilon(d, i){
     plotSPLOM( form_url_for_population(i+1) );
 
 }
+
+function selectEpsilonFromSelection(button, i){
+  console.log("from URL" + i);
+
+  d3.select('#epsilons').selectAll("button").classed("active", false);
+  button.classed("active", true);
+
+  plotSPLOM( form_url_for_population(i+1) );
+
+}
+
 
 function form_url_for_population(i) {
   // returns path for the i'th population [1-indexed]
@@ -159,8 +170,6 @@ function plotSPLOM( dataURL ){
 
     function plot(p) {
 
-      console.log(p)
-      console.log(p.x)
 
       var cell = d3.select(this);
 
@@ -177,7 +186,7 @@ function plotSPLOM( dataURL ){
       cell.selectAll("circle")
           .data(parsedData)
           .enter().append("circle")
-          .attr("cx", function(d) { console.log("point is:" + d[p.x.column] + ", " + d[p.y.column]); return x(d[p.x.column]); })
+          .attr("cx", function(d) { return x(d[p.x.column]); })
           .attr("cy", function(d) { return y(d[p.y.column]); })
           .attr("r", 4)
           .style("fill", function(d) { return color(1); } );
