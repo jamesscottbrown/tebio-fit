@@ -10,7 +10,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Single Network Visualisations</title>
+    <title>Model Comparison</title>
 
     <link rel="stylesheet" href="bootstrap/3.3.6/css/bootstrap.css">
     <link rel="stylesheet" href="starter-template.css">
@@ -53,7 +53,7 @@
 <div class="container">
 
     <div class="starter-template">
-        <h1>Single Network Visualisations</h1>
+        <h1>Model Comparison</h1>
 
         <p class="lead">This page compares several candidate models.</p>
 
@@ -188,6 +188,7 @@
                     }
 
                     tmp["row"] = i;
+                    tmp["model_name"] = global_data.models[j].model_name;
                     data[i][j] = tmp;
                 }
             }
@@ -218,7 +219,10 @@
                     .attr('height', 20)
                     .style('fill', function (d, i) {
                         return color(i);
-                    });
+                    })
+
+                    .append("svg:title")
+                    .text(function(d) { return d.model_name + ": " + d.val; });;
 
 
 
