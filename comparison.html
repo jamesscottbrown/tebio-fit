@@ -104,6 +104,7 @@
 
 
     function setup_page() {
+        width = $("body").width() - 200;
         getModelDetails(fill_placeholders);
     }
 
@@ -130,7 +131,8 @@
                 .append('img')
                 .attr('src', function (d) {
                     return path + d.model_image;
-                });
+                })
+                .attr("width", width);
 
 
         // plot graph
@@ -144,14 +146,15 @@
             parsedData = dsv.parseRows(rawData);
 
 
-            var width = 480,
+            var //width = 480,
                     size = 230,
                     padding = 20,
+                    xPadding = 25;
                     bar_thickness = 20
                     height = bar_thickness * parsedData.length;
 
             var x = d3.scale.linear()
-                    .range([0, width])
+                    .range([0, width - xPadding])
                     .domain([0, 1]);
 
             var y = d3.scale.linear()
@@ -160,14 +163,14 @@
 
             var color = d3.scale.category10()
                     .domain([0, parsedData[0].length]);
-            
+
             var svg = d3.select('#modelLikelihood').append('svg')
-                    .attr("width", width + 100);
+                    .attr("width", width);
 
             var xAxis = d3.svg.axis()
                     .scale(x)
                     .orient("bottom")
-                    .ticks(5);
+                    .ticks(10);
 
 
             // reformat data, so that each bar can work out its position as well as length
@@ -234,7 +237,7 @@
                     .append("text")
                     .text( function(d,i){ return d.epsilon; } )
                     .attr("y", bar_thickness/2)
-                    .attr("x", width + 5)
+                    .attr("x", (width + 5 - xPadding))
 
             svg.append("g")
                     .attr("class", "x axis")
