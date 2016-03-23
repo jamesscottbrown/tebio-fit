@@ -289,6 +289,9 @@
                       .attr("r", 5)
                       .attr("fill", function(d){ return color(d.series); });
 
+            points.append("svg:title")
+                    .text(function(d,i) { return "(" + i + ", " + d.y + ")"; }); // TODO: add 1 to i?
+
 
             // add line
             var line = d3.svg.line()
