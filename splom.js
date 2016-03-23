@@ -108,6 +108,10 @@ function plotSPLOM( dataURL ){
     var dsv = d3.dsv(" ", "text/plain");
     parsedData = dsv.parseRows(rawData);
 
+    for (var i=0; i < parsedData.length; i++){
+      parsedData[i]["particle_number"] = i;
+    }
+
     var domainByParam = {},
       params = model.params.filter(function (x){ return x.type != "constant"; }),
       n = params.length;
@@ -212,11 +216,13 @@ function plotSPLOM( dataURL ){
         return e[0][0] > d[p.x.column] || d[p.x.column] > e[1][0]
             || e[0][1] > d[p.y.column] || d[p.y.column] > e[1][1];
       });
+      highlightTimeSeries();
     }
 
     // If the brush is empty, select all circles.
     function brushend() {
       if (brush.empty()) svg.selectAll(".not-selected").classed("not-selected", false);
+      highlightTimeSeries();
     }
 
     d3.select(self.frameElement).style("height", size * n + padding + 20 + "px");

@@ -203,7 +203,18 @@
 
           var cleanedData = cleanedData.filter( function(d){return d.modelIndex == modelIndex; } );
 
-          var n = model.fit.length;
+          // We need to re-number
+          // Some particle numbers are missing, as the corresponding particles were rejected.
+          // We need to re-number so we can match up with the trajectories in traj_Population*.txt
+          // Need to be careful, as there is a row in this file for each concentration for each particle.
+          var prev = cleanedData[0]["particle_number"]; var n=0;
+          for (var i=0; i < cleanedData.length; i++) {
+            if ( cleanedData[i]["particle_number"] != prev ){ n = n+1; prev = cleanedData[i]["particle_number"];  }
+            cleanedData[i]["particle_number_shifted"] = n;
+
+          }
+
+                  var n = model.fit.length;
 
 
           // Build graphic
@@ -262,7 +273,8 @@
             var groups = cell.selectAll("g")
                     .data(thisSpecies)
                     .enter()
-                    .append("g");
+                    .append("g")
+                    .attr("class", "trajectory");
 
             // Add points
               var points = groups.selectAll("circle")
@@ -332,6 +344,27 @@
 
       });
       }
+
+      function highlightTimeSeries(){
+
+        var unSelected = d3.select("#splom").select("svg").select(".cell").selectAll(".not-selected").data();
+        var unselectedParticles = [];
+        for (var i=0; i<unSelected.length; i++){
+          unselectedParticles[i] = Number( unSelected[i].particle_number );
+        }
+
+
+// select all lines
+        d3.select("#timeseries").select("svg").selectAll(".trajectory").classed("trajectory-not-selected", false);
+
+// unselect the ones that are unselected
+        d3.select("#timeseries").select("svg").selectAll(".trajectory").classed("trajectory-not-selected", function(d){
+          console.log("data:", d.particle_number_shifted + " " + unselectedParticles.indexOf( Number(d.particle_number_shifted) ) );
+          return unselectedParticles.indexOf( d.particle_number_shifted ) != -1;
+
+        });
+
+      }
     </script>
 
     <style>
@@ -340,6 +373,10 @@
       }
       .timeseries-axis path {
         fill:none; stroke:black; stroke-width:2px;
+      }
+
+      .trajectory-not-selected{
+        visibility: hidden;
       }
     </style>
 
