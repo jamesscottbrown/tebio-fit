@@ -58,15 +58,14 @@
         <p class="lead">This page summarises the dynamics of a single network. For an overview of the candidate models,
             see the <a onclick="redirectToOverview();">overview page</a></p>
 
-        <h2> Network </h2>
+        <h2> Model </h2>
         <img id=networkPlaceholder src=""/>
 
-        <h2>Amplitude/Frequency Characteristics </h2>
+        <p>The model can be downloaded in SBML format: <a href id="sbml_link"></a></p>
 
-        <h2> Mathematical model </h2>
-        The model can be downloaded in SBML format: <a href id="sbml_link"></a>
+        <h2> Priors </h2>
 
-        <div id="paramTable"></div>
+        <div id="paramTable" style="float: none;"></div>
 
 
         <h2> Posterior Distribution </h2>
@@ -77,13 +76,18 @@
 
         <p>This is a matrix of scatterplots of samples from the posterior distribution.</p>
 
+        <p>Each point corresponds to a choice of parameters that, when simulated, gave a time-series that was "close" to the provided experimental data. In this context, two time-series are considered "close" if the Euclidian distance between them is less than the user-specified parameter epsilon.</p>
+
         <p>If uniform priors are applied, the axes are scaled to the range of the prior. The proportion of the area
             covered by the samples thus gives an indication of the <i>factor by which uncertainty in the parameters has
-                been reduced</i>.</p>
+                been reduced</i> by the experimental observations.</p>
 
-        <h2>Simulation Trajectory</h2>
+        <h2>Simulation Trajectories</h2>
         <div id="timeseries"></div>
 
+        <p>This graph shows time-series for simulations using the parameters indicate in the scatterplots above.</p>
+
+        <p>You can filter the graphs shown here by selecting a rectangular region in one of the scatterplot panes above.</p>
     </div>
 
 </div><!-- /.container -->
@@ -140,7 +144,7 @@
         document.getElementById('networkPlaceholder').src = path + model.model_image;
 
         document.getElementById('sbml_link').href = path + model.sbml_name;
-        document.getElementById('sbml_link').innerText = model.sbml_name;
+        document.getElementById('sbml_link').innerHTML = model.sbml_name;
 
         listEpsilons();
         paramTable();
@@ -209,7 +213,6 @@
                 }
             }
 
-            console.log("Range is " + minVal + " " + maxVal)
             // Filter out results from different model
             var modelIndex;
             for (var i = 0; i < global_data.models.length; i++) {
