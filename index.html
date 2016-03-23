@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,45 +19,47 @@
     <script src="bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
 
-        <link rel="stylesheet" type="text/css" href="site.css">
-        <script src="http://d3js.org/d3.v3.min.js"></script>
-        <script src="splom.js"></script>
+    <link rel="stylesheet" type="text/css" href="site.css">
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="splom.js"></script>
 
 
-  </head>
+</head>
 
-  <body>
+<body>
 
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Project name</a>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Project name</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
         </div><!--/.nav-collapse -->
-      </div>
-    </nav>
+    </div>
+</nav>
 
-    <div class="container">
+<div class="container">
 
-      <div class="starter-template">
+    <div class="starter-template">
         <h1>Single Network Visualisations</h1>
 
-        <p class="lead">This page summarises the dynamics of a single network. For an overview of the candidate models, see the <a onclick="redirectToOverview();">overview page</a></p>
+        <p class="lead">This page summarises the dynamics of a single network. For an overview of the candidate models,
+            see the <a onclick="redirectToOverview();">overview page</a></p>
 
         <h2> Network </h2>
-        <img id=networkPlaceholder src="" />
+        <img id=networkPlaceholder src=""/>
 
         <h2>Amplitude/Frequency Characteristics </h2>
 
@@ -67,70 +69,75 @@
         <div id="paramTable"></div>
 
 
-
-
         <h2> Posterior Distribution </h2>
-        <div id="epsilons">Epsilon values: </div>
+        <div id="epsilons">Epsilon values:</div>
 
-        
+
         <div id="splom"></div>
 
         <p>This is a matrix of scatterplots of samples from the posterior distribution.</p>
 
-        <p>If uniform priors are applied, the axes are scaled to the range of the prior. The proportion of the area covered by the samples thus gives an indication of the <i>factor by which uncertainty in the parameters has been reduced</i>.</p>  
+        <p>If uniform priors are applied, the axes are scaled to the range of the prior. The proportion of the area
+            covered by the samples thus gives an indication of the <i>factor by which uncertainty in the parameters has
+                been reduced</i>.</p>
 
         <h2>Simulation Trajectory</h2>
         <div id="timeseries"></div>
 
-      </div>
+    </div>
 
-    </div><!-- /.container -->
+</div><!-- /.container -->
 
 
-    <script>
-      var experiment; var model; var modelName; var path; var global_data;
+<script>
+    var experiment;
+    var model;
+    var modelName;
+    var path;
+    var global_data;
 
-      function redirectToOverview(){
+    function redirectToOverview() {
         return window.location.href = window.location.href.split("?")[0].replace("index.html", "comparison.html") + "?experiment=" + getUrlVars()["experiment"];
-      }
+    }
 
-      // Function from http://stackoverflow.com/a/979996
-      function getUrlVars() {
-          var vars = {};
-          var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,    
-          function(m,key,value) {
-            vars[key] = value;
-          });
-          return vars;
-        }
+    // Function from http://stackoverflow.com/a/979996
+    function getUrlVars() {
+        var vars = {};
+        var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,
+                function (m, key, value) {
+                    vars[key] = value;
+                });
+        return vars;
+    }
 
-      function getModelDetails( callback ){
+    function getModelDetails(callback) {
 
         experiment = getUrlVars()["experiment"];
         experiment = experiment ? experiment : "mock1";
-        modelName =  getUrlVars()["model"];
-        path = "data/" + experiment + "/"; 
+        modelName = getUrlVars()["model"];
+        path = "data/" + experiment + "/";
 
 
-        d3.json(path+"setup.json", function(d){
-          global_data = d;
-          model = global_data.models.filter( function(x){ return x.model_name == modelName }  )[0];
-          callback();
+        d3.json(path + "setup.json", function (d) {
+            global_data = d;
+            model = global_data.models.filter(function (x) {
+                return x.model_name == modelName
+            })[0];
+            callback();
         })
 
-      };
+    }
+    ;
 
 
+    function setup_page() {
+        getModelDetails(fill_placeholders);
+    }
 
-
-      function setup_page(){
-        getModelDetails( fill_placeholders );
-      }
-
-      function fill_placeholders(){
+    function fill_placeholders() {
 
         sbml_name = model.model_name;
-        document.getElementById('networkPlaceholder').src = path + model.model_image; 
+        document.getElementById('networkPlaceholder').src = path + model.model_image;
 
         document.getElementById('sbml_link').href = path + model.sbml_name;
         document.getElementById('sbml_link').innerText = model.sbml_name;
@@ -138,219 +145,257 @@
         listEpsilons();
         paramTable();
 
-        plotSPLOM( form_url_for_population(1) );
-        d3.select("#epsilons").selectAll("button").filter(function(d){ return d == global_data.epsilon_schedule[0] }).classed("active", true)
+        plotSPLOM(form_url_for_population(1));
+        d3.select("#epsilons").selectAll("button").filter(function (d) {
+            return d == global_data.epsilon_schedule[0]
+        }).classed("active", true)
 
         plotTimeSeries(1);
 
         var epsilon = getUrlVars()["epsilon"];
-        if (epsilon){
-          var ind = global_data.epsilon_schedule.indexOf(Number(epsilon));
-          var button = d3.select("#epsilons").selectAll('button').filter( function(x){ return x == epsilon; });
+        if (epsilon) {
+            var ind = global_data.epsilon_schedule.indexOf(Number(epsilon));
+            var button = d3.select("#epsilons").selectAll('button').filter(function (x) {
+                return x == epsilon;
+            });
 
-          selectEpsilonFromSelection( button, ind );
-          plotTimeSeries(ind+1);
+            selectEpsilonFromSelection(button, ind);
+            plotTimeSeries(ind + 1);
         }
 
-    };
+    }
+    ;
 
     window.onLoad = setup_page();
 
 
-      function plotTimeSeries(i){
+    function plotTimeSeries(i) {
 
         var dataURL = path + "traj_Population" + i + ".txt";
 
 
-        d3.text(dataURL, function(error, rawData) {
-          if (error) throw error;
+        d3.text(dataURL, function (error, rawData) {
+            if (error) throw error;
 
-          var dsv = d3.dsv(" ", "text/plain");
-          parsedData = dsv.parseRows(rawData);
+            var dsv = d3.dsv(" ", "text/plain");
+            parsedData = dsv.parseRows(rawData);
 
-          // Rows encode values: particle number, replicate number, model id, species id, then series
+            // Rows encode values: particle number, replicate number, model id, species id, then series
 
-          cleanedData = [];
-          var minVal = Infinity; var maxVal = -Infinity;
+            cleanedData = [];
+            var minVal = Infinity;
+            var maxVal = -Infinity;
 
-          for (var i=0; i < parsedData.length; i++){
-            raw = parsedData[i];
+            for (var i = 0; i < parsedData.length; i++) {
+                raw = parsedData[i];
 
-            tmp = [];
-            tmp["particle_number"] = raw[0];
-            tmp["replicate"] = raw[1];
-            tmp["modelIndex"] = Number(raw[2]);
-            tmp["speciesIndex"] = raw[3];
-            tmp["speciesName"] = model.fit[ tmp["speciesIndex"] ];
-            tmp["data"] = raw.slice(4);
+                tmp = [];
+                tmp["particle_number"] = raw[0];
+                tmp["replicate"] = raw[1];
+                tmp["modelIndex"] = Number(raw[2]);
+                tmp["speciesIndex"] = raw[3];
+                tmp["speciesName"] = model.fit[tmp["speciesIndex"]];
+                tmp["data"] = raw.slice(4);
 
-            cleanedData[i] = tmp;
+                cleanedData[i] = tmp;
 
-            var thisMin = Math.min.apply(null, tmp.data);
-            if ( thisMin < minVal ){ minVal = thisMin; }
-            var thisMax = Math.max.apply(null, tmp.data);
-            if ( thisMax > maxVal ){ maxVal = thisMax; }
-          }
-
-          console.log("Range is " + minVal + " " + maxVal)
-          // Filter out results from different model
-          var modelIndex;
-          for (var i=0; i < global_data.models.length; i++) {
-            if (global_data.models[i].model_name == model.model_name){
-              modelIndex = i;
+                var thisMin = Math.min.apply(null, tmp.data);
+                if (thisMin < minVal) {
+                    minVal = thisMin;
+                }
+                var thisMax = Math.max.apply(null, tmp.data);
+                if (thisMax > maxVal) {
+                    maxVal = thisMax;
+                }
             }
-          }
 
-          var cleanedData = cleanedData.filter( function(d){return d.modelIndex == modelIndex; } );
+            console.log("Range is " + minVal + " " + maxVal)
+            // Filter out results from different model
+            var modelIndex;
+            for (var i = 0; i < global_data.models.length; i++) {
+                if (global_data.models[i].model_name == model.model_name) {
+                    modelIndex = i;
+                }
+            }
 
-          // We need to re-number
-          // Some particle numbers are missing, as the corresponding particles were rejected.
-          // We need to re-number so we can match up with the trajectories in traj_Population*.txt
-          // Need to be careful, as there is a row in this file for each concentration for each particle.
-          var prev = cleanedData[0]["particle_number"]; var n=0;
-          for (var i=0; i < cleanedData.length; i++) {
-            if ( cleanedData[i]["particle_number"] != prev ){ n = n+1; prev = cleanedData[i]["particle_number"];  }
-            cleanedData[i]["particle_number_shifted"] = n;
+            var cleanedData = cleanedData.filter(function (d) {
+                return d.modelIndex == modelIndex;
+            });
 
-          }
+            // We need to re-number
+            // Some particle numbers are missing, as the corresponding particles were rejected.
+            // We need to re-number so we can match up with the trajectories in traj_Population*.txt
+            // Need to be careful, as there is a row in this file for each concentration for each particle.
+            var prev = cleanedData[0]["particle_number"];
+            var n = 0;
+            for (var i = 0; i < cleanedData.length; i++) {
+                if (cleanedData[i]["particle_number"] != prev) {
+                    n = n + 1;
+                    prev = cleanedData[i]["particle_number"];
+                }
+                cleanedData[i]["particle_number_shifted"] = n;
 
-                  var n = model.fit.length;
+            }
 
-
-          // Build graphic
-          var width = 960,
-                  size = 230,
-                  padding = 100;
-
-          var x = d3.scale.linear()
-                  .range([padding / 2, width - padding / 2])
-                  .domain([0, cleanedData[0].data.length ]);
-
-
-          var y = d3.scale.linear()
-                  .range([size - padding / 2, padding / 2])
-                  .domain([minVal, maxVal]);
-
-          var xAxis = d3.svg.axis()
-                  .scale(x)
-                  .orient("bottom")
-                  .ticks(6);
-
-          var yAxis = d3.svg.axis()
-                  .scale(y)
-                  .orient("left")
-                  .ticks(6);
-
-          var color = d3.scale.category20c();
-
-          d3.select("#timeseries").select('svg').remove();
-          var svg = d3.select("#timeseries").append('svg')
-                  .attr("width", width)
-                  .attr("height", size * n + padding)
-                  .append("g")
-                  .attr("transform", "translate(" + padding + "," + padding / 2 + ")");
+            var n = model.fit.length;
 
 
-          var cell = svg.selectAll(".cell")
-                  .data( model.fit )
-                  .enter().append("g")
-                  .attr("class", "cell")
-                  // Swapped column order by changing (n - d.i - 1) to (d.i)
-                  .attr("transform", function(d, i) {
-                    return "translate(0," + i * size + ")";
-                  })
-                  .attr("id", function(d){ return d.replace('+', '_'); })
-                  .each(plot);
+            // Build graphic
+            var width = 960,
+                    size = 230,
+                    padding = 100;
+
+            var x = d3.scale.linear()
+                    .range([padding / 2, width - padding / 2])
+                    .domain([0, cleanedData[0].data.length]);
 
 
-          function plot(speciesName){
-            // filter to remove other species
-            var thisSpecies = cleanedData.filter( function(d){ return d.speciesName == speciesName  } );
+            var y = d3.scale.linear()
+                    .range([size - padding / 2, padding / 2])
+                    .domain([minVal, maxVal]);
 
-            var cell = d3.select("#" + speciesName.replace('+', '_'));
+            var xAxis = d3.svg.axis()
+                    .scale(x)
+                    .orient("bottom")
+                    .ticks(6);
 
-            // One group per time series
-            var groups = cell.selectAll("g")
-                    .data(thisSpecies)
-                    .enter()
+            var yAxis = d3.svg.axis()
+                    .scale(y)
+                    .orient("left")
+                    .ticks(6);
+
+            var color = d3.scale.category20c();
+
+            d3.select("#timeseries").select('svg').remove();
+            var svg = d3.select("#timeseries").append('svg')
+                    .attr("width", width)
+                    .attr("height", size * n + padding)
                     .append("g")
-                    .attr("class", "trajectory");
-
-            // Add points
-              var points = groups.selectAll("circle")
-                   .data( function(d,i){
-                     // Here 'raw' is the vector of measurements from one simulation
-                     // Form new array, where each element still corresponds to one measurement,
-                     // but is an object that also records the identity of the simulation form which it comes
-                     // (alternatively, could style the parent group instead?)
-                     var raw = groups.data()[i].data;
-                     var process = [];
-                     for (var j=0; j<raw.length; j++){
-                       tmp = [];
-                       tmp["series"] = i;
-                       tmp["y"] = raw[j];
-                       process[j] = tmp;
-
-                     }
-                       return process;
-                   } )
-                    .enter()
-                    .append('circle')
-                      .attr("cx", function(d,i){ return x(i); } )
-                      .attr("cy", function(d,i){ return y(d.y); } )
-                      .attr("r", 5)
-                      .attr("fill", function(d){ return color(d.series); });
-
-            points.append("svg:title")
-                    .text(function(d,i) { return "(" + i + ", " + d.y + ")"; }); // TODO: add 1 to i?
+                    .attr("transform", "translate(" + padding + "," + padding / 2 + ")");
 
 
-            // add line
-            var line = d3.svg.line()
-                    .x(  function (d,i){ return x(d.x); })
-                    .y( function (d,i){ return y(d.y); });
-                    //.y( function (d){ return y(d.y); });
+            var cell = svg.selectAll(".cell")
+                    .data(model.fit)
+                    .enter().append("g")
+                    .attr("class", "cell")
+                    // Swapped column order by changing (n - d.i - 1) to (d.i)
+                    .attr("transform", function (d, i) {
+                        return "translate(0," + i * size + ")";
+                    })
+                    .attr("id", function (d) {
+                        return d.replace('+', '_');
+                    })
+                    .each(plot);
 
-            groups.append("path")
-                    .attr("d", function (d,i){
-                              var processed = [];
-                              for (var j=0; j < d.data.length; j++) {
+
+            function plot(speciesName) {
+                // filter to remove other species
+                var thisSpecies = cleanedData.filter(function (d) {
+                    return d.speciesName == speciesName
+                });
+
+                var cell = d3.select("#" + speciesName.replace('+', '_'));
+
+                // One group per time series
+                var groups = cell.selectAll("g")
+                        .data(thisSpecies)
+                        .enter()
+                        .append("g")
+                        .attr("class", "trajectory");
+
+                // Add points
+                var points = groups.selectAll("circle")
+                        .data(function (d, i) {
+                            // Here 'raw' is the vector of measurements from one simulation
+                            // Form new array, where each element still corresponds to one measurement,
+                            // but is an object that also records the identity of the simulation form which it comes
+                            // (alternatively, could style the parent group instead?)
+                            var raw = groups.data()[i].data;
+                            var process = [];
+                            for (var j = 0; j < raw.length; j++) {
+                                tmp = [];
+                                tmp["series"] = i;
+                                tmp["y"] = raw[j];
+                                process[j] = tmp;
+
+                            }
+                            return process;
+                        })
+                        .enter()
+                        .append('circle')
+                        .attr("cx", function (d, i) {
+                            return x(i);
+                        })
+                        .attr("cy", function (d, i) {
+                            return y(d.y);
+                        })
+                        .attr("r", 5)
+                        .attr("fill", function (d) {
+                            return color(d.series);
+                        });
+
+                points.append("svg:title")
+                        .text(function (d, i) {
+                            return "(" + i + ", " + d.y + ")";
+                        }); // TODO: add 1 to i?
+
+
+                // add line
+                var line = d3.svg.line()
+                        .x(function (d, i) {
+                            return x(d.x);
+                        })
+                        .y(function (d, i) {
+                            return y(d.y);
+                        });
+                //.y( function (d){ return y(d.y); });
+
+                groups.append("path")
+                        .attr("d", function (d, i) {
+                            var processed = [];
+                            for (var j = 0; j < d.data.length; j++) {
                                 tmp = [];
                                 tmp["x"] = j;
                                 tmp["y"] = d.data[j];
-                                if (d.data[j] == ""){ continue; }
+                                if (d.data[j] == "") {
+                                    continue;
+                                }
                                 processed[j] = tmp;
-                              }
-                              return line(processed);
-                            })
-                    .attr("class", "timeseries-line")
-                    .style('stroke', function(d,i){ return color(i); })
+                            }
+                            return line(processed);
+                        })
+                        .attr("class", "timeseries-line")
+                        .style('stroke', function (d, i) {
+                            return color(i);
+                        })
 
-            // add axis
-            cell.append("g")
-                    .attr("class", "y timeseries-axis")
-                    .attr("transform", "translate(" + padding/2 + ",0)") .call(yAxis);
+                // add axis
+                cell.append("g")
+                        .attr("class", "y timeseries-axis")
+                        .attr("transform", "translate(" + padding / 2 + ",0)").call(yAxis);
 
-          // x-axis and label
-          cell.append("g")
-                    .attr("class", "x timeseries-axis")
-                    .attr("transform", "translate(0," + (size - padding/2) + ")") .call(xAxis);
+                // x-axis and label
+                cell.append("g")
+                        .attr("class", "x timeseries-axis")
+                        .attr("transform", "translate(0," + (size - padding / 2) + ")").call(xAxis);
 
-            cell.append("text")
-                    .attr("transform", "rotate(-90,0,0) translate(-" + (size + padding)/2 + ", 0)" ) // TODO: fiddle with this
-                    .text( function(d,i){ return d; });
+                cell.append("text")
+                        .attr("transform", "rotate(-90,0,0) translate(-" + (size + padding) / 2 + ", 0)") // TODO: fiddle with this
+                        .text(function (d, i) {
+                            return d;
+                        });
 
-          }
+            }
 
-      });
-      }
+        });
+    }
 
-      function highlightTimeSeries(){
+    function highlightTimeSeries() {
 
         var unSelected = d3.select("#splom").select("svg").select(".cell").selectAll(".not-selected").data();
         var unselectedParticles = [];
-        for (var i=0; i<unSelected.length; i++){
-          unselectedParticles[i] = Number( unSelected[i].particle_number );
+        for (var i = 0; i < unSelected.length; i++) {
+            unselectedParticles[i] = Number(unSelected[i].particle_number);
         }
 
 
@@ -358,27 +403,29 @@
         d3.select("#timeseries").select("svg").selectAll(".trajectory").classed("trajectory-not-selected", false);
 
 // unselect the ones that are unselected
-        d3.select("#timeseries").select("svg").selectAll(".trajectory").classed("trajectory-not-selected", function(d){
-          console.log("data:", d.particle_number_shifted + " " + unselectedParticles.indexOf( Number(d.particle_number_shifted) ) );
-          return unselectedParticles.indexOf( d.particle_number_shifted ) != -1;
+        d3.select("#timeseries").select("svg").selectAll(".trajectory").classed("trajectory-not-selected", function (d) {
+            return unselectedParticles.indexOf(d.particle_number_shifted) != -1;
 
         });
 
-      }
-    </script>
+    }
+</script>
 
-    <style>
-      .timeseries-line{
+<style>
+    .timeseries-line {
         fill: none;
-      }
-      .timeseries-axis path {
-        fill:none; stroke:black; stroke-width:2px;
-      }
+    }
 
-      .trajectory-not-selected{
+    .timeseries-axis path {
+        fill: none;
+        stroke: black;
+        stroke-width: 2px;
+    }
+
+    .trajectory-not-selected {
         visibility: hidden;
-      }
-    </style>
+    }
+</style>
 
-  </body>
+</body>
 </html>

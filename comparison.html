@@ -154,15 +154,15 @@
                     size = 230,
                     padding = 20,
                     xPadding = 25;
-                    bar_thickness = 20
-                    height = bar_thickness * parsedData.length;
+            bar_thickness = 20
+            height = bar_thickness * parsedData.length;
 
             var x = d3.scale.linear()
                     .range([0, width - xPadding])
                     .domain([0, 1]);
 
             var y = d3.scale.linear()
-                    .range([0,height - bar_thickness])
+                    .range([0, height - bar_thickness])
                     .domain([0, parsedData[0].length]);
 
             var color = d3.scale.category10()
@@ -179,19 +179,22 @@
 
             // reformat data, so that each bar can work out its position as well as length
 
-            var data = []; data.push([]);
+            var data = [];
+            data.push([]);
 
-            for (var i=0; i < parsedData.length; i++) {
+            for (var i = 0; i < parsedData.length; i++) {
                 data[i] = [];
                 for (var j = 0; j < parsedData[i].length; j++) {
-                    if (parsedData[i][j] == "" ){ continue; }
+                    if (parsedData[i][j] == "") {
+                        continue;
+                    }
                     tmp = [];
                     tmp["val"] = Number(parsedData[i][j]);
 
                     if (j == 0) {
                         tmp["cumSum"] = 0;
                     } else {
-                        tmp["cumSum"] = data[i][j - 1].cumSum + Number(parsedData[i][j-1]);
+                        tmp["cumSum"] = data[i][j - 1].cumSum + Number(parsedData[i][j - 1]);
                     }
 
                     tmp["row"] = i;
@@ -202,7 +205,7 @@
             }
 
 
-                var row = svg.selectAll(".row")
+            var row = svg.selectAll(".row")
                     .data(data)
 
                     .enter().append("g")
@@ -222,25 +225,34 @@
                     .attr('x', function (d, i) {
                         return x(d.cumSum);
                     })
-                    .attr('width', function (d,i){ return x(d.val); } )
+                    .attr('width', function (d, i) {
+                        return x(d.val);
+                    })
                     .attr('height', 20)
                     .style('fill', function (d, i) {
                         return color(i);
                     });
 
             bars.append("svg:title")
-                    .text(function(d) { return d.model_name + ": " + d.val; });
+                    .text(function (d) {
+                        return d.model_name + ": " + d.val;
+                    });
 
-            bars.on("click", function(d){
-                return window.location.href = window.location.href.split("?")[0].replace("comparison.html", "index.html") + "?experiment=" + getUrlVars()["experiment"] + "&model=" + d.model_name + "&epsilon=" + d.epsilon;}
+            bars.on("click", function (d) {
+                        return window.location.href = window.location.href.split("?")[0].replace("comparison.html", "index.html") + "?experiment=" + getUrlVars()["experiment"] + "&model=" + d.model_name + "&epsilon=" + d.epsilon;
+                    }
             );
 
             row.selectAll("text")
-                    .data(function (d,i){return d;})
+                    .data(function (d, i) {
+                        return d;
+                    })
                     .enter()
                     .append("text")
-                    .text( function(d,i){ return d.epsilon; } )
-                    .attr("y", bar_thickness/2)
+                    .text(function (d, i) {
+                        return d.epsilon;
+                    })
+                    .attr("y", bar_thickness / 2)
                     .attr("x", (width + 5 - xPadding))
 
             svg.append("g")
