@@ -141,15 +141,17 @@
         plotSPLOM( form_url_for_population(1) );
         d3.select("#epsilons").selectAll("button").filter(function(d){ return d == global_data.epsilon_schedule[0] }).classed("active", true)
 
+        plotTimeSeries(1);
+
         var epsilon = getUrlVars()["epsilon"];
         if (epsilon){
           var ind = global_data.epsilon_schedule.indexOf(Number(epsilon));
           var button = d3.select("#epsilons").selectAll('button').filter( function(x){ return x == epsilon; });
 
           selectEpsilonFromSelection( button, ind );
+          plotTimeSeries(ind+1);
         }
 
-        plotTimeSeries(1); // TODO: fix to plot correct population
     };
 
     window.onLoad = setup_page();
@@ -230,6 +232,7 @@
 
           var color = d3.scale.category20c();
 
+          d3.select("#timeseries").select('svg').remove();
           var svg = d3.select("#timeseries").append('svg')
                   .attr("width", width)
                   .attr("height", size * n + padding)

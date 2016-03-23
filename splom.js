@@ -46,6 +46,7 @@ function selectEpsilon(d, i){
     d3.select(this).classed("active", true);
 
     plotSPLOM( form_url_for_population(i+1) );
+    plotTimeSeries(i+1);
 
 }
 
