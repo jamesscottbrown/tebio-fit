@@ -160,7 +160,7 @@
 
             var color = d3.scale.category10()
                     .domain([0, parsedData[0].length]);
-
+            
             var svg = d3.select('#modelLikelihood').append('svg')
                     .attr("width", width + 100);
 
@@ -189,6 +189,7 @@
 
                     tmp["row"] = i;
                     tmp["model_name"] = global_data.models[j].model_name;
+                    tmp["epsilon"] = global_data.epsilon_schedule[i];
                     data[i][j] = tmp;
                 }
             }
@@ -205,32 +206,33 @@
                     });
 
 
-            row.selectAll("rect")
+            var bars = row.selectAll("rect")
                     .data(function (d, i) {
                         return d;
                     })
                     .enter()
                     .append('rect')
                     .attr('x', function (d, i) {
-                        console.log(d.val + "," + d.cumSum);
                         return x(d.cumSum);
                     })
                     .attr('width', function (d,i){ return x(d.val); } )
                     .attr('height', 20)
                     .style('fill', function (d, i) {
                         return color(i);
-                    })
+                    });
 
-                    .append("svg:title")
-                    .text(function(d) { return d.model_name + ": " + d.val; });;
+            bars.append("svg:title")
+                    .text(function(d) { return d.model_name + ": " + d.val; });
 
-
+            bars.on("click", function(d){
+                return window.location.href = window.location.href.split("?")[0].replace("comparison.html", "index.html") + "?experiment=" + getUrlVars()["experiment"] + "&model=" + d.model_name + "&epsilon=" + d.epsilon;}
+            );
 
             row.selectAll("text")
                     .data(function (d,i){return d;})
                     .enter()
                     .append("text")
-                    .text( function(d,i){ console.log("Row: " + d.row); return global_data.epsilon_schedule[d.row]; } )
+                    .text( function(d,i){ return d.epsilon; } )
                     .attr("y", bar_thickness/2)
                     .attr("x", width + 5)
 
@@ -238,7 +240,6 @@
                     .attr("class", "x axis")
                     .attr("transform", "translate(0," + (height + 20) + ")")
                     .call(xAxis);
-
 
         })
     }
