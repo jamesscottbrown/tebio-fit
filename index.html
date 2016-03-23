@@ -57,7 +57,7 @@
         <p class="lead">This page summarises the dynamics of a single network. For an overview of the candidate models, see the <a onclick="redirectToOverview();">overview page</a></p>
 
         <h2> Network </h2>
-        <img id=networkPlaceholder></img>
+        <img id=networkPlaceholder src="" />
 
         <h2>Amplitude/Frequency Characteristics </h2>
 
@@ -80,6 +80,7 @@
         <p>If uniform priors are applied, the axes are scaled to the range of the prior. The proportion of the area covered by the samples thus gives an indication of the <i>factor by which uncertainty in the parameters has been reduced</i>.</p>  
 
         <h2>Simulation Trajectory</h2>
+        <div id="timeseries"></div>
 
       </div>
 
@@ -147,12 +148,194 @@
 
           selectEpsilonFromSelection( button, ind );
         }
+
+        plotTimeSeries(1); // TODO: fix to plot correct population
     };
 
     window.onLoad = setup_page();
 
+
+      function plotTimeSeries(i){
+
+        var dataURL = path + "traj_Population" + i + ".txt";
+
+
+        d3.text(dataURL, function(error, rawData) {
+          if (error) throw error;
+
+          var dsv = d3.dsv(" ", "text/plain");
+          parsedData = dsv.parseRows(rawData);
+
+          // Rows encode values: particle number, replicate number, model id, species id, then series
+
+          cleanedData = [];
+          var minVal = Infinity; var maxVal = -Infinity;
+
+          for (var i=0; i < parsedData.length; i++){
+            raw = parsedData[i];
+
+            tmp = [];
+            tmp["particle_number"] = raw[0];
+            tmp["replicate"] = raw[1];
+            tmp["modelIndex"] = Number(raw[2]);
+            tmp["speciesIndex"] = raw[3];
+            tmp["speciesName"] = model.fit[ tmp["speciesIndex"] ];
+            tmp["data"] = raw.slice(4);
+
+            cleanedData[i] = tmp;
+
+            var thisMin = Math.min.apply(null, tmp.data);
+            if ( thisMin < minVal ){ minVal = thisMin; }
+            var thisMax = Math.max.apply(null, tmp.data);
+            if ( thisMax > maxVal ){ maxVal = thisMax; }
+          }
+
+          console.log("Range is " + minVal + " " + maxVal)
+          // Filter out results from different model
+          var modelIndex;
+          for (var i=0; i < global_data.models.length; i++) {
+            if (global_data.models[i].model_name == model.model_name){
+              modelIndex = i;
+            }
+          }
+
+          var cleanedData = cleanedData.filter( function(d){return d.modelIndex == modelIndex; } );
+
+          var n = model.fit.length;
+
+
+          // Build graphic
+          var width = 960,
+                  size = 230,
+                  padding = 100;
+
+          var x = d3.scale.linear()
+                  .range([padding / 2, width - padding / 2])
+                  .domain([0, cleanedData[0].data.length ]);
+
+
+          var y = d3.scale.linear()
+                  .range([size - padding / 2, padding / 2])
+                  .domain([minVal, maxVal]);
+
+          var xAxis = d3.svg.axis()
+                  .scale(x)
+                  .orient("bottom")
+                  .ticks(6);
+
+          var yAxis = d3.svg.axis()
+                  .scale(y)
+                  .orient("left")
+                  .ticks(6);
+
+          var color = d3.scale.category20c();
+
+          var svg = d3.select("#timeseries").append('svg')
+                  .attr("width", width)
+                  .attr("height", size * n + padding)
+                  .append("g")
+                  .attr("transform", "translate(" + padding + "," + padding / 2 + ")");
+
+
+          var cell = svg.selectAll(".cell")
+                  .data( model.fit )
+                  .enter().append("g")
+                  .attr("class", "cell")
+                  // Swapped column order by changing (n - d.i - 1) to (d.i)
+                  .attr("transform", function(d, i) {
+                    return "translate(0," + i * size + ")";
+                  })
+                  .attr("id", function(d){ return d.replace('+', '_'); })
+                  .each(plot);
+
+
+          function plot(speciesName){
+            // filter to remove other species
+            var thisSpecies = cleanedData.filter( function(d){ return d.speciesName == speciesName  } );
+
+            var cell = d3.select("#" + speciesName.replace('+', '_'));
+
+            // One group per time series
+            var groups = cell.selectAll("g")
+                    .data(thisSpecies)
+                    .enter()
+                    .append("g");
+
+            // Add points
+              var points = groups.selectAll("circle")
+                   .data( function(d,i){
+                     // Here 'raw' is the vector of measurements from one simulation
+                     // Form new array, where each element still corresponds to one measurement,
+                     // but is an object that also records the identity of the simulation form which it comes
+                     // (alternatively, could style the parent group instead?)
+                     var raw = groups.data()[i].data;
+                     var process = [];
+                     for (var j=0; j<raw.length; j++){
+                       tmp = [];
+                       tmp["series"] = i;
+                       tmp["y"] = raw[j];
+                       process[j] = tmp;
+
+                     }
+                       return process;
+                   } )
+                    .enter()
+                    .append('circle')
+                      .attr("cx", function(d,i){ return x(i); } )
+                      .attr("cy", function(d,i){ return y(d.y); } )
+                      .attr("r", 5)
+                      .attr("fill", function(d){ return color(d.series); });
+
+
+            // add line
+            var line = d3.svg.line()
+                    .x(  function (d,i){ return x(d.x); })
+                    .y( function (d,i){ return y(d.y); });
+                    //.y( function (d){ return y(d.y); });
+
+            groups.append("path")
+                    .attr("d", function (d,i){
+                              var processed = [];
+                              for (var j=0; j < d.data.length; j++) {
+                                tmp = [];
+                                tmp["x"] = j;
+                                tmp["y"] = d.data[j];
+                                if (d.data[j] == ""){ continue; }
+                                processed[j] = tmp;
+                              }
+                              return line(processed);
+                            })
+                    .attr("class", "timeseries-line")
+                    .style('stroke', function(d,i){ return color(i); })
+
+            // add axis
+            cell.append("g")
+                    .attr("class", "y timeseries-axis")
+                    .attr("transform", "translate(" + padding/2 + ",0)") .call(yAxis);
+
+          // x-axis and label
+          cell.append("g")
+                    .attr("class", "x timeseries-axis")
+                    .attr("transform", "translate(0," + (size - padding/2) + ")") .call(xAxis);
+
+            cell.append("text")
+                    .attr("transform", "rotate(-90,0,0) translate(-" + (size + padding)/2 + ", 0)" ) // TODO: fiddle with this
+                    .text( function(d,i){ return d; });
+
+          }
+
+      });
+      }
     </script>
 
+    <style>
+      .timeseries-line{
+        fill: none;
+      }
+      .timeseries-axis path {
+        fill:none; stroke:black; stroke-width:2px;
+      }
+    </style>
 
   </body>
 </html>
