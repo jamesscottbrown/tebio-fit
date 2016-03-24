@@ -1,4 +1,14 @@
 
+function rangeNotNA(list){
+    var min = Infinity, max = -Infinity;
+    for (var i=0; i < list.length; i++){
+        if (list[i] < min){ min = list[i]; }
+        if (list[i] > max){ max = list[i]; }
+    }
+    var tmp=[];
+    tmp[0]=min; tmp[1] = max;
+    return tmp;
+}
 
 function plotTimeSeries(i) {
 
@@ -46,6 +56,14 @@ function plotTimeSeries(i) {
             if (thisMax > maxVal[speciesIndex]) {
                 maxVal[speciesIndex] = thisMax;
             }
+        }
+
+        // Expand range to include time-series
+        for (var i = 0; i < model.fit.length; i++) {
+            tmp = rangeNotNA( global_data.measurements[i] );
+
+            if (tmp[0] < minVal[i]){ minVal[i] = tmp[0]; }
+            if (tmp[1] > maxVal[i]){ maxVal[i] = tmp[1]; }
         }
 
         // Filter out results from different model
