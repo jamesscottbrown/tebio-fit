@@ -39,9 +39,10 @@ function summariseModelTable() {
         var //width = 480,
             size = 230,
             padding = 20,
-            xPadding = 25;
-        bar_thickness = 20
-        height = bar_thickness * parsedData.length;
+            xPadding = 50,
+            bar_thickness = 20,
+            full_height = (bar_thickness + padding) * parsedData.length,
+            height = bar_thickness * parsedData.length;
 
         var x = d3.scale.linear()
             .range([0, width - xPadding])
@@ -55,7 +56,8 @@ function summariseModelTable() {
             .domain([0, parsedData[0].length]);
 
         var svg = d3.select('#modelLikelihood').append('svg')
-            .attr("width", width);
+            .attr("width", width)
+            .attr("height", full_height);
 
         var xAxis = d3.svg.axis()
             .scale(x)
@@ -139,12 +141,23 @@ function summariseModelTable() {
                 return d.epsilon;
             })
             .attr("y", bar_thickness / 2)
-            .attr("x", (width + 5 - xPadding))
+            .attr("x", (width + 5 - xPadding));
+
+        svg.append("g")
+            .attr("transform", "rotate(90) translate (" +  (height / 2) + "," +  - (width + 30 - xPadding) + ")" )
+            .append("text").text("Epsilon");
+
+
 
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + (height + 20) + ")")
             .call(xAxis);
+
+        svg.append("g")
+            .attr("transform", "translate (" +  (width / 2 - 60 ) + "," +  (height + 50) + ")" )
+            .append("text").text("Model Probability");
+
 
     })
 }
