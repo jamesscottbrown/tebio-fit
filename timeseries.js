@@ -13,10 +13,15 @@ function plotTimeSeries(i) {
 
         // Rows encode values: particle number, replicate number, model id, species id, then series
 
-        cleanedData = [];
-        var minVal = Infinity;
-        var maxVal = -Infinity;
 
+
+        var minVal = [], maxVal = [];
+        for (var i = 0; i < model.fit.length; i++) {
+            minVal[i] = Infinity;
+            maxVal[i] = -Infinity;
+        }
+
+        cleanedData = [];
         for (var i = 0; i < parsedData.length; i++) {
             raw = parsedData[i];
 
@@ -32,13 +37,14 @@ function plotTimeSeries(i) {
 
             cleanedData[i] = tmp;
 
+            var speciesIndex = tmp["speciesIndex"];
             var thisMin = Math.min.apply(null, tmp.data);
-            if (thisMin < minVal) {
-                minVal = thisMin;
+            if (thisMin < minVal[speciesIndex] ) {
+                minVal[speciesIndex] = thisMin;
             }
             var thisMax = Math.max.apply(null, tmp.data);
-            if (thisMax > maxVal) {
-                maxVal = thisMax;
+            if (thisMax > maxVal[speciesIndex]) {
+                maxVal[speciesIndex] = thisMax;
             }
         }
 
@@ -83,20 +89,25 @@ function plotTimeSeries(i) {
             .range([padding / 2, width - padding / 2])
             .domain([0, endTime ]);
 
+        var yScales = [], yAxes = [];
+        for (var i = 0; i < model.fit.length; i++) {
+            tmp = d3.scale.linear()
+                .range([size - padding / 2, padding / 2])
+                .domain([minVal[i], maxVal[i]]);
+            yScales[i] = tmp;
 
-        var y = d3.scale.linear()
-            .range([size - padding / 2, padding / 2])
-            .domain([minVal, maxVal]);
+            yAxes[i] = d3.svg.axis()
+                .scale(yScales[i])
+                .orient("left")
+                .ticks(6);
+
+        }
 
         var xAxis = d3.svg.axis()
             .scale(x)
             .orient("bottom")
             .ticks(6);
 
-        var yAxis = d3.svg.axis()
-            .scale(y)
-            .orient("left")
-            .ticks(6);
 
         var color = d3.scale.category20c();
 
@@ -125,6 +136,9 @@ function plotTimeSeries(i) {
 
         // construct reference lines
         for (var species=0; species < model.fit.length; species++){
+
+            var y = yScales[species];
+
             var refLineData = [];
             for (var t=0; t < global_data.measurements[species].length; t++){
                 var tmp=[];
@@ -166,6 +180,10 @@ function plotTimeSeries(i) {
             });
 
             var cell = d3.select("#" + speciesName.replace('+', '_'));
+
+            var speciesIndex = model.fit.indexOf(speciesName);
+            var y = yScales[ speciesIndex ];
+            var yAxis = yAxes[ speciesIndex ];
 
             // One group per time series
             var groups = cell.selectAll("g")
