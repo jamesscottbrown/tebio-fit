@@ -26,7 +26,9 @@ function plotTimeSeries(i) {
             tmp["modelIndex"] = Number(raw[2]);
             tmp["speciesIndex"] = raw[3];
             tmp["speciesName"] = model.fit[tmp["speciesIndex"]];
+
             tmp["data"] = raw.slice(4);
+            tmp["data"].length = global_data.times.length; // will truncate to remove spurious "" at end of line
 
             cleanedData[i] = tmp;
 
@@ -68,16 +70,18 @@ function plotTimeSeries(i) {
         }
 
         var n = model.fit.length;
+        var endTime = global_data.times[ global_data.times.length - 1 ];
 
 
         // Build graphic
-        var width = 960,
+        var paddedWidth = 960,
             size = 230,
-            padding = 100;
+            padding = 100,
+            width  = paddedWidth - padding;
 
         var x = d3.scale.linear()
             .range([padding / 2, width - padding / 2])
-            .domain([0, cleanedData[0].data.length]);
+            .domain([0, endTime ]);
 
 
         var y = d3.scale.linear()
@@ -98,7 +102,7 @@ function plotTimeSeries(i) {
 
         d3.select("#timeseries").select('svg').remove();
         var svg = d3.select("#timeseries").append('svg')
-            .attr("width", width)
+            .attr("width", paddedWidth)
             .attr("height", size * n + padding)
             .append("g")
             .attr("transform", "translate(" + padding + "," + padding / 2 + ")");
@@ -154,7 +158,8 @@ function plotTimeSeries(i) {
                 .enter()
                 .append('circle')
                 .attr("cx", function (d, i) {
-                    return x(i);
+                    console.log(i + " and " + global_data.times[i] + " and " + x(global_data.times[i]));
+                    return x(global_data.times[i]);
                 })
                 .attr("cy", function (d, i) {
                     return y(d.y);
@@ -166,14 +171,14 @@ function plotTimeSeries(i) {
 
             points.append("svg:title")
                 .text(function (d, i) {
-                    return "(" + i + ", " + d.y + ")";
+                    return "(" + global_data.times[i] + ", " + d.y + ")";
                 }); // TODO: add 1 to i?
 
 
             // add line
             var line = d3.svg.line()
                 .x(function (d, i) {
-                    return x(d.x);
+                    return x(global_data.times[d.x]);
                 })
                 .y(function (d, i) {
                     return y(d.y);
