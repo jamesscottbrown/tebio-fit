@@ -122,7 +122,44 @@ function plotTimeSeries(i) {
             .each(plot);
 
 
-        function plot(speciesName) {
+
+        // construct reference lines
+        for (var species=0; species < model.fit.length; species++){
+            var refLineData = [];
+            for (var t=0; t < global_data.measurements[species].length; t++){
+                var tmp=[];
+                tmp["x"] = global_data.times[t];
+                tmp["y"] = global_data.measurements[species][t];
+
+                if ( tmp["y"] !== "NA"){
+                    refLineData[ refLineData.length ] = tmp;
+                }
+
+            }
+
+
+            var cell = d3.select("#timeseries")
+                .select('svg')
+                .select( "#" + model.fit[species].replace('+', '_') );
+
+            var group = cell.append("g")
+                .attr("class", "refline");
+
+            var points2 = group.selectAll("path")
+                .data(refLineData)
+                .enter()
+                .append("path")
+                .attr("d", d3.svg.symbol().type('cross') )
+                .attr("transform", function(d){ return "translate (" + x(d.x) + ", " + y(d.y) + ")";}  )
+                .fill("grey");
+
+            group.selectAll("path").append("title")
+                .text(function (d) {
+                    return "(" + d.x + ", " + d.y + ")";
+                });
+        }
+
+        function plot(speciesName){
             // filter to remove other species
             var thisSpecies = cleanedData.filter(function (d) {
                 return d.speciesName == speciesName
@@ -158,7 +195,6 @@ function plotTimeSeries(i) {
                 .enter()
                 .append('circle')
                 .attr("cx", function (d, i) {
-                    console.log(i + " and " + global_data.times[i] + " and " + x(global_data.times[i]));
                     return x(global_data.times[i]);
                 })
                 .attr("cy", function (d, i) {
