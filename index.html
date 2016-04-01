@@ -141,7 +141,7 @@
     function fill_placeholders() {
 
         sbml_name = model.model_name;
-        document.getElementById('networkPlaceholder').src = path + model.model_image;
+        document.getElementById('networkPlaceholder').src = path + modelName + ".gif";
 
         document.getElementById('sbml_link').href = path + model.sbml_name;
         document.getElementById('sbml_link').innerHTML = model.sbml_name;

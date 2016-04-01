@@ -20,7 +20,7 @@ function summariseModelTable() {
         })
         .append('img')
         .attr('src', function (d) {
-            return path + d.model_image;
+            return path + d.model_name + ".gif";
         })
         .attr("width", width);
 
