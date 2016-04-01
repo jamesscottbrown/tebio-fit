@@ -7,7 +7,7 @@ function paramTable() {
     var tBody = table.append("tbody");
 
 
-    var columns = ['name', 'type', 'min', 'max'];
+    var columns = ['name', 'string'];
     tHead.append("tr")
         .selectAll("th")
         .data(columns)
