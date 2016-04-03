@@ -23,8 +23,7 @@
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="splom.js"></script>
     <script src="stackedbar.js"></script>
-
-
+    <script src="distancePlot.js"></script>
 </head>
 
 <body>
@@ -60,6 +59,8 @@
         <div id="models"></div>
 
         <div id="modelLikelihood"></div>
+
+        <div id="errors"></div>
 
     </div>
 
@@ -110,6 +111,7 @@
 
     function fill_placeholders() {
         summariseModelTable();
+        plotErrors();
     }
     ;
 
