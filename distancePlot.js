@@ -125,8 +125,6 @@ function plotErrors(){
 
     function plotLine(filteredData){
 
-
-
         var group = svg.append("g")
             .attr("class", "refline")
             .attr("stroke", color(filteredData[0].modelNum+1) )
@@ -137,7 +135,22 @@ function plotErrors(){
             .enter()
             .append("path")
             .attr("d", d3.svg.symbol().type('cross') )
-            .attr("transform", function(d, i){ console.log(color(modelNum)); return "translate (" + x(i) + ", " + y(d.y) + ")";}  )
+            .attr("transform", function(d, i){ console.log(color(d.modelNum)); return "translate (" + x(i) + ", " + y(d.y) + ")";}  )
+            .classed("epsilon" + filteredData[0].epsilon, "true" )
+            .classed("epsilon-points", "true" );
+
+            points.on("mouseover",
+                function(d){
+                    console.log("Woo: ", "epsilon" + d.epsilon);
+                    svg.selectAll(".epsilon-points")
+                        .classed("unselected", function(d2){ return d.epsilon != d2.epsilon; })
+                    ;
+                })
+                .on("mouseout",
+                function(d){
+                    console.log("mouseout" + d.epsilon)
+                    svg.selectAll(".epsilon-points").classed("unselected", false);
+                });
 
 
         group.selectAll("path").append("title")
@@ -160,7 +173,8 @@ function plotErrors(){
             .attr("fill", "none")
             .attr("stroke", color(filteredData[0].modelNum+1))
             .attr("stroke-width", "1px")
-            .attr("fill", "none");
+            .attr("fill", "none")
+            .classed("epsilon-line", "true" );
 
     }
 
