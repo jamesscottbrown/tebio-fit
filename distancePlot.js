@@ -46,7 +46,7 @@ function plotErrors(){
 
     // add y-axis and label
     svg.append("g")
-        .attr("class", "y timeseries-axis")
+        .attr("class", "y distanceplot-axis")
         .attr("transform", "translate(" + padding / 2 + ",0)").call(yAxis);
 
     svg.append("text")
@@ -56,7 +56,7 @@ function plotErrors(){
 
     // add x-axis and label
     svg.append("g")
-        .attr("class", "x timeseries-axis")
+        .attr("class", "x distanceplot-axis")
         .attr("transform", "translate(0," + (height - padding / 2) + ")").call(xAxis);
 
     svg.append("text")
