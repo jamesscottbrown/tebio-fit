@@ -93,39 +93,44 @@ function plotErrors(){
             var dsv = d3.dsv(" ", "text/plain");
             var parsedData = dsv.parseRows(rawData);
 
-            // filter and call plot once per model
+            // filter to get particles for this model only
             for (var modelNum = 0; modelNum < numModels; modelNum++) {
                 var thisModelData = parsedData.filter(function (d) {
                     return d[3] == modelNum;
                 });
 
-                plotLine(thisModelData, modelNum, global_data.epsilon_schedule[generation-1]);
+
+                // reformat data
+                var filteredData = [];
+                for (var i=0; i < thisModelData.length; i++){
+                    var error = thisModelData[i][2];
+                    error = error.replace('[', '').replace(']', '');
+
+                    var tmp = [];
+                    tmp.y = parseFloat(error);
+                    tmp.modelNum = modelNum;
+                    tmp.epsilon = global_data.epsilon_schedule[generation-1];
+
+                    filteredData[i] = tmp;
+                }
+
+                filteredData.sort(function(a,b){ return a.y > b.y; });
+
+                // plot
+                plotLine(filteredData);
             }
         });
 
     }
 
-    function plotLine(data, modelNum, epsilon){
-
-        var filteredData = [];
-        for (var i=0; i < data.length; i++){
-            var error = data[i][2];
-            error = error.replace('[', '').replace(']', '');
-
-            var tmp = [];
-            //tmp.x = i;
-            tmp.y = parseFloat(error);
-            filteredData[i] = tmp;
-        }
-
-        filteredData.sort(function(a,b){ return a.y > b.y; });
+    function plotLine(filteredData){
 
 
 
         var group = svg.append("g")
             .attr("class", "refline")
-            .attr("stroke", function(d){ return color(modelNum+1); } )
-            .attr("fill", function(d){ return color(modelNum+1); } );
+            .attr("stroke", color(filteredData[0].modelNum+1) )
+            .attr("fill", color(filteredData[0].modelNum+1) );
 
         var points = group.selectAll("path")
             .data(filteredData)
@@ -137,7 +142,7 @@ function plotErrors(){
 
         group.selectAll("path").append("title")
             .text(function (d) {
-                return "epsilon =" + epsilon + ", error = " + d.y;
+                return "epsilon =" + d.epsilon + ", error = " + d.y;
             });
 
 
@@ -153,7 +158,7 @@ function plotErrors(){
 
         svg.append("svg:path").attr("d", line(filteredData))
             .attr("fill", "none")
-            .attr("stroke", color(modelNum+1))
+            .attr("stroke", color(filteredData[0].modelNum+1))
             .attr("stroke-width", "1px")
             .attr("fill", "none");
 
