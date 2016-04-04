@@ -51,23 +51,42 @@
     <div class="starter-template">
         <h1>About</h1>
 
-        <h2>This tool</h2>
+        <p><blockquote>Reasoning about sets of nonlinear dynamical systems is hard. Good visualization systems can make it easier.</blockquote></p>
 
-        <p><a href="http://www.theosysbio.bio.ic.ac.uk/resources/abc-sysbio/">ABC-SysBio</a> is a tool for likelihood-free
-        parameter inference and model selection in dynamical systems. It uses the Approximate Bayesian Computation
-            Sequential Monte Carlo (ABC SMC) approach described below.</p>
+        <p>This tool provides interactive visualization to facilitate parameter-estimation and model comparison
+            for general non-linear models.
 
-        <p>This tool visualises the results of running ABC-SysBio using interactive graphics.</p>
+            </p>
 
-        <h2>Theory</h2>
+        <p>Currently, it is focused on displaying the results produced by
+            <a href="http://www.theosysbio.bio.ic.ac.uk/resources/abc-sysbio/">ABC-SysBio</a>, a tool for likelihood-free
+            parameter inference and model selection in dynamical systems that uses the Approximate Bayesian Computation
+            Sequential Monte Carlo (ABC SMC) approach described below. However, it could be extended to view the results
+            produced form other tools (for example, for the results of applying MCMC to models for which a likelihood
+            function is available).
+        </p>
+
+
+        <h2>Design Principles</h2>
+
+        <p>This tool was designed with several principles in mind:</p>
+        <ul style="text-align: left;">
+            <li><em>easy setup</em>: the viewer run in any modern web-browser, on any platform with nothing to install. Pre-processing requires python scripts with minimal dependencies.</li>
+            <li><em>modularity</em>: code to visually compare two SBML models is a separate python module that can be re-used in other packages. Code to perform visualisation is entirely independent of code that performs inference</li>
+            <li><em>freely licensed</em>: BSD license imposes few restrictions on re-use</li>
+            <li><em>interactivity</em> allows the user to see all the data, yet also focus only on what is important to them at a particular moment</li>
+            <li>figures are directly integrated with explanations of what they show. The purpose of this is two-fold: it help the novice user by providing explantions at the point of need, avoiding them having to refer back to documentation, and it produces a self-contained report that can be presented to a collaborator or supervisor who may be unfamiliar with the tools used.</li>
+            <li>easy export of images: figures can be exported, and optionally edited in third-party applications</li>
+        </ul>
+
+
+        <h1>Theory</h1>
 
         <p>Suppose we have some initial idea of what values the parameters in a model might have, which we can express as a prior probability distribution. We then perform an experiment, obtaining measurements $x_0$. We now want to use these measurements to update our knowledge about the likely values of the parameters. </p>
 
         <p>The way to do this is to obtain the <i>posterior distribution</i> by applying Bayes' rule: $$ \underbrace{p(\theta | x_0)}_{posterior} = \frac{ \overbrace{p(x_0 | \theta)}^{likelihood}  \overbrace{p(\theta)}^{prior} }{ p(x_0) } $$</p>
 
         <p>For sufficiently simple models, we can find an analytical expression for the posterior probability distribution function. More commonly, this is impossible, but we can draw samples from it using a Monte Carlo method. For more complicated models, we may not even be able to obtain an expression for the likelihood function, but if we can perform simulations we can apply an Approximate Bayesian Computation (ABC) method.</p>
-
-
 
 <br />
 
