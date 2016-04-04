@@ -47,7 +47,7 @@ function selectEpsilon(d, i) {
     d3.select('#epsilons').selectAll("button").classed("active", false);
     d3.select(this).classed("active", true);
 
-    plotSPLOM(form_url_for_population(i + 1));
+    plotSPLOM(form_url_for_population(i + 1), i);
     plotTimeSeries(i + 1);
 }
 
@@ -55,7 +55,7 @@ function selectEpsilonFromSelection(button, i) {
     d3.select('#epsilons').selectAll("button").classed("active", false);
     button.classed("active", true);
 
-    plotSPLOM(form_url_for_population(i + 1));
+    plotSPLOM(form_url_for_population(i + 1), i);
 }
 
 
@@ -77,9 +77,7 @@ function listEpsilons() {
         .on("click", selectEpsilon);
 }
 
-function plotSPLOM(dataURL) {
-
-
+function plotSPLOM(dataURL, generation) {
     var width = 960,
         size = 230,
         padding = 20;
@@ -100,7 +98,8 @@ function plotSPLOM(dataURL) {
         .orient("left")
         .ticks(6);
 
-    var color = d3.scale.category10();
+    var generations = Array.apply(null, global_data.epsilon_schedule).map(function (_, i) {return i;});
+    var color = d3.scale.category10().domain(generations);
 
     d3.text(dataURL, function (error, rawData) {
         if (error) throw error;
@@ -110,6 +109,7 @@ function plotSPLOM(dataURL) {
 
         for (var i = 0; i < parsedData.length; i++) {
             parsedData[i]["particle_number"] = i;
+            parsedData[i]["generation"] = generation;
         }
 
         var domainByParam = {},
@@ -217,7 +217,7 @@ function plotSPLOM(dataURL) {
                 })
                 .attr("r", 4)
                 .style("fill", function (d) {
-                    return color(1);
+                    return color(d.generation);
                 });
         }
 
