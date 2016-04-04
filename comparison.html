@@ -60,7 +60,28 @@
 
         <div id="modelLikelihood"></div>
 
+        <p><b>Explanation:</b> Each row represents a different generation, with a different value of epsilon.
+        The width of the constituitive bars indicates the probability of each model, estimated using the samples
+            from that generation.
+        </p>
+
+        <p><b>Interactivity:</b> Hovering over a point displays the name of the corresponding model and its probability.
+        Clicking on a bar navigates to the a view of the samples obtained for the corresponding model and generation.
+        </p>
+
         <div id="errors"></div>
+
+        <p><b>Explanation:</b> Each horizontal dashed line represents the value of the threshold $\epsilon$ for a
+            generation. Each point represents the value of $d(x, x_0)$ for a single particle. Lines join the points
+            representing particles from the same model and generation. </p>
+
+        <p><b>Interactivity:</b> mousing over a point highlights all points from the same generation. Hovering over a
+            point displays the distance for that point. </p>
+
+        <p><b>Interpretation:</b>  For each generation, two things are apparent from the graph: how many particles correspond to each model
+            (indicated by how far curves extend to the right), and how well the particles from each model match the
+            experimental measurements (indicated by how far curves extend downwards).</p>
+
 
     </div>
 
