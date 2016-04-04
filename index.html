@@ -62,7 +62,7 @@
 
         <p>The model can be downloaded in SBML format: <a href id="sbml_link"></a></p>
 
-        <h2> Priors </h2>
+        <h2> Prior Distribution </h2>
 
         <div id="paramTable" style="float: none;"></div>
 
@@ -70,23 +70,35 @@
         <h2> Posterior Distribution </h2>
         <div id="epsilons">Epsilon values:</div>
 
-
         <div id="splom"></div>
 
-        <p>This is a matrix of scatterplots of samples from the posterior distribution.</p>
+        <p><b>Explanation:</b> This is a matrix of scatterplots of samples from the posterior distribution. Each point
+            corresponds to a choice of parameters that, when simulated, gave a time-series that was "close" to the
+            provided experimental data.</p>
 
-        <p>Each point corresponds to a choice of parameters that, when simulated, gave a time-series that was "close" to the provided experimental data. In this context, two time-series are considered "close" if the Euclidian distance between them is less than the user-specified parameter epsilon.</p>
+        <p><b>Interactivity:</b> Clicking the button changes the generation for which samples are plotted, and updates
+        the plot of trajectories below. Holding down the mouse allows selection of the points in a rectangular region
+        of any scatterplot; the selected points are highlighted in all scatterplots, and other tajectories are hidden in
+        the trajectory plot.</p>
 
-        <p>If uniform priors are applied, the axes are scaled to the range of the prior. The proportion of the area
-            covered by the samples thus gives an indication of the <i>factor by which uncertainty in the parameters has
-                been reduced</i> by the experimental observations.</p>
+        <p><b>Interpretation:</b> If uniform priors are applied, the scatterplot axes are scaled to the range of the
+            prior. The proportion of the area covered by the samples thus gives an indication of the <i>factor by which
+                uncertainty in the parameters has been reduced</i> by the experimental observations. Changing between
+            different values of epsilon reveals how this affects the estimated posterior distribution. The pattern in
+            which points are arranged reveals any correlations between the parameters, which are inidicative of problems
+            with identifiability.</p>
+
 
         <h2>Simulation Trajectories</h2>
         <div id="timeseries"></div>
 
-        <p>This graph shows time-series for simulations using the parameters indicate in the scatterplots above.</p>
 
-        <p>You can filter the graphs shown here by selecting a rectangular region in one of the scatterplot panes above.</p>
+        <p><b>Explanation:</b> This graph shows time-courses for simulations using the parameters indicate in the
+            scatterplots above. Black crosses indicate the values of the experimental measurements.</p>
+
+        <p><b>Interactivity:</b> Highlighting points in the scatterplot filters this plot, by hiding trajectories
+            corresponding to points that are not selected. Hovering over a point reveals its value.</p>
+
     </div>
 
 </div><!-- /.container -->
