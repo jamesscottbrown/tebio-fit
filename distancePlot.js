@@ -134,7 +134,7 @@ function plotErrors(){
             .data(filteredData)
             .enter()
             .append("path")
-            .attr("d", d3.svg.symbol().type('cross') )
+            .attr("d", d3.svg.symbol().type('circle') )
             .attr("transform", function(d, i){ console.log(color(d.modelNum)); return "translate (" + x(i) + ", " + y(d.y) + ")";}  )
             .classed("epsilon" + filteredData[0].epsilon, "true" )
             .classed("epsilon-points", "true" );
