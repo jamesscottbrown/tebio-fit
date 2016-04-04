@@ -145,7 +145,8 @@ function summariseModelTable() {
 
         svg.append("g")
             .attr("transform", "rotate(90) translate (" +  (height / 2) + "," +  - (width + 30 - xPadding) + ")" )
-            .append("text").text("Epsilon");
+            .append("text").text("Epsilon")
+            .classed("axis-title", true);
 
 
 
@@ -155,8 +156,9 @@ function summariseModelTable() {
             .call(xAxis);
 
         svg.append("g")
-            .attr("transform", "translate (" +  (width / 2 - 60 ) + "," +  (height + 50) + ")" )
-            .append("text").text("Model Probability");
+            .attr("transform", "translate (" +  (width / 2 - 60 ) + "," +  (height + 60) + ")" )
+            .append("text").text("Model Probability")
+            .classed("axis-title", true);
 
 
     })

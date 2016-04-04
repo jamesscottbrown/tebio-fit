@@ -51,7 +51,8 @@ function plotErrors(){
 
     svg.append("text")
         .attr("transform", "rotate(-90,0,0) translate(-" + (height + padding) / 2 + ", 0)") // TODO: fiddle with this
-        .text("Error");
+        .text("Distance")
+        .classed("axis-title", true);;
 
 
     // add x-axis and label
@@ -61,7 +62,8 @@ function plotErrors(){
 
     svg.append("text")
         .attr("transform", "translate(" + (width/2) + "," + (height)  +  ")") // TODO: fiddle with this
-        .text("Particle Rank");
+        .text("Particle Rank")
+        .classed("axis-title", true);
 
 
 
