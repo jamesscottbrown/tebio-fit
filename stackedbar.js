@@ -3,31 +3,32 @@ function summariseModelTable() {
 
     var sections = d3.select('#models')
         .selectAll("div")
+        .append("ul")
         .data(global_data.models)
         .enter()
-        .append("div");
+        .append("li");
 
-    sections
-        .append('h3')
-        .text(function (d) {
-            return d.model_name;
-        });
-
-    sections
-        .append('a')
+        sections.append('a')
         .attr('href', function (d) {
             return window.location.href.split("?")[0].replace("comparison.html", "index.html") + "?experiment=" + getUrlVars()["experiment"] + "&model=" + d.model_name;
         })
-        .append('img')
-        .attr('src', function (d) {
-            return path + d.model_name + ".gif";
+        .text(function (d) {
+            return d.model_name;
         })
-        .attr("width", width);
 
+    d3.select('#models').append("img")
+        .attr('src', path + "compare.png");
+
+
+    var numModels = global_data.models.length;
+    if (numModels == 1){
+        d3.select(".lead").text("This page is intended to compare models, but only one was provided:")
+    } else {
+        d3.select(".lead").text("This page compares " + numModels.toString() + " models:")
+
+    }
 
     // plot graph
-
-
     var dataURL = path + "ModelDistribution.txt";
     d3.text(dataURL, function (error, rawData) {
         if (error) throw error;
