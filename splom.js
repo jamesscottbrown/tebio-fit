@@ -7,14 +7,16 @@ function paramTable() {
     var tBody = table.append("tbody");
 
 
-    var columns = ['name', 'string'];
+    var columns = [{"json_field": 'name', "display_name": "Parameter"},
+        {"json_field": 'string', "display_name": "Distribution"}];
+
     tHead.append("tr")
         .selectAll("th")
         .data(columns)
         .enter()
         .append("th")
         .text(function (column) {
-            return column;
+            return column.display_name;
         });
 
 
@@ -31,7 +33,7 @@ function paramTable() {
             // {name: "p5", type: "uniform", min: 0, max: 30}
 
             return columns.map(function (column) {
-                return {column: column, value: row[column]};
+                return {column: column.display_name, value: row[column.json_field]};
             });
 
         })
