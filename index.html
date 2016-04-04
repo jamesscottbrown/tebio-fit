@@ -128,9 +128,17 @@
     function getModelDetails(callback) {
 
         experiment = getUrlVars()["experiment"];
-        experiment = experiment ? experiment : "mock1";
         modelName = getUrlVars()["model"];
         path = "data/" + experiment + "/";
+
+
+        if (!experiment){
+            var url = window.location.href;
+            window.location = url.replace('index.html', 'about.html');
+        } else if (!modelName){
+            var url = window.location.href;
+            window.location = url.replace('index.html', 'comparison.html');
+        }
 
 
         d3.json(path + "setup.json", function (d) {
