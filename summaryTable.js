@@ -9,8 +9,6 @@ function summaryTable() {
 
         rawData = rawData.replace('[', '', 'g').replace(']', '', 'g').replace('  ', ' ', 'g');
 
-        console.log(rawData);
-
         var parsedData = dsv.parseRows(rawData);
 
         var table = d3.select('#summaryTable').append("table");
@@ -46,7 +44,6 @@ function summaryTable() {
                 // {name: "p5", type: "uniform", min: 0, max: 30}
 
                 return columns.map(function (column) {
-                    console.log(row);
                     return {column: column.display_name, value: row[column.table_column]};
                 });
 

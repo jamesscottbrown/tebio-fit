@@ -143,14 +143,12 @@ function plotErrors(){
 
             points.on("mouseover",
                 function(d){
-                    console.log("Woo: ", "epsilon" + d.epsilon);
                     svg.selectAll(".epsilon-points")
                         .classed("unselected", function(d2){ return d.epsilon != d2.epsilon; })
                     ;
                 })
                 .on("mouseout",
                 function(d){
-                    console.log("mouseout" + d.epsilon)
                     svg.selectAll(".epsilon-points").classed("unselected", false);
                 });
 
