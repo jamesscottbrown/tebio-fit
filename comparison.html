@@ -24,6 +24,8 @@
     <script src="splom.js"></script>
     <script src="stackedbar.js"></script>
     <script src="distancePlot.js"></script>
+    <script src="summaryTable.js"></script>
+
 </head>
 
 <body>
@@ -57,6 +59,8 @@
         <p class="lead">This page compares several candidate models.</p>
 
         <div id="models"></div>
+
+        <div id = "summaryTable"></div>
 
         <div id="modelLikelihood"></div>
 
@@ -134,6 +138,7 @@
 
     function fill_placeholders() {
         summariseModelTable();
+        summaryTable();
         plotErrors();
     }
     ;
