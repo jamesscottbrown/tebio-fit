@@ -70,6 +70,8 @@
         <h2> Posterior Distribution </h2>
         <div id="epsilons">Epsilon values:</div>
 
+        <button onclick="toggleHistograms();" id="histogramButton" class = "btn btn-default">Histograms on diagonal</button>
+
         <div id="splom"></div>
 
         <p><b>Explanation:</b> This is a matrix of scatterplots of samples from the posterior distribution. Each point
@@ -110,6 +112,7 @@
     var modelName;
     var path;
     var global_data;
+    var drawHistograms = false;
 
     function redirectToOverview() {
         return window.location.href = window.location.href.split("?")[0].replace("index.html", "comparison.html") + "?experiment=" + getUrlVars()["experiment"];
@@ -187,7 +190,6 @@
         }
 
     }
-    ;
 
     window.onLoad = setup_page();
 
@@ -209,6 +211,11 @@
     .trajectory-not-selected {
         visibility: hidden;
     }
+
+    .bar rect {
+        shape-rendering: crispEdges;
+    }
+
 </style>
 
 </body>

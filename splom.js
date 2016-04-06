@@ -79,6 +79,25 @@ function listEpsilons() {
         .on("click", selectEpsilon);
 }
 
+function toggleHistograms(){
+
+    // toggle global drawHistograms boolean and button state
+    drawHistograms = !drawHistograms;
+    d3.select("#histogramButton").classed("active", drawHistograms );
+
+    // simulate a click on the currently highlighted epsilon button to
+    // force redraw of correct data
+    var target = d3.select('#epsilons').select(".active")[0][0];
+
+    var event = new MouseEvent('click', {
+        'view': window,
+        'bubbles': true,
+        'cancelable': true
+    });
+    var canceled = !target.dispatchEvent(event);
+
+}
+
 function plotSPLOM(dataURL, generation) {
     var width = 960,
         size = 230,
@@ -177,8 +196,15 @@ function plotSPLOM(dataURL, generation) {
             // Swapped column order by changing (n - d.i - 1) to (d.i)
             .attr("transform", function (d) {
                 return "translate(" + (d.i) * size + "," + d.j * size + ")";
-            })
-            .each(plot);
+            });
+        
+        cell.each( function (d){
+                if ( drawHistograms && d.x == d.y){
+                    plotHist(d, this);
+                } else {
+                    plot(d, this);
+                }
+            });
 
         // Titles for the diagonal.
         cell.filter(function (d) {
@@ -193,10 +219,52 @@ function plotSPLOM(dataURL, generation) {
 
         cell.call(brush);
 
-        function plot(p) {
+        function plotHist(p, thisCell){
+
+            var cell = d3.select(thisCell);
+
+            x.domain(domainByParam[p.x]);
+
+            cell.append("rect")
+                .attr("class", "frame")
+                .attr("x", padding / 2)
+                .attr("y", padding / 2)
+                .attr("width", size - padding)
+                .attr("height", size - padding);
 
 
-            var cell = d3.select(this);
+            var values = [];
+            for (var i=0; i < parsedData.length; i++){
+                values[i] = parsedData[i][p.x.column];
+            }
+
+            var data = d3.layout.histogram()
+                .bins(x.ticks(50))
+                (values);
+
+            y.domain([0, d3.max(data, function(d) { return d.y; })]);
+
+            var bar = d3.select(thisCell).selectAll(".bar")
+                .data(data)
+                .enter().append("g")
+                .attr("class", "bar")
+                .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+
+            bar.append("rect")
+                .attr("x", 1)
+                .attr("width", x(data[0].dx) - 1)
+                .attr("height", function(d) { return (size - padding/2) - y(d.y); })
+                .style("fill", function (d) {
+                    return color(parsedData[0].generation);
+                });
+            ;
+
+        }
+
+
+        function plot(p, thisCell) {
+
+            var cell = d3.select(thisCell);
 
             x.domain(domainByParam[p.x]);
             y.domain(domainByParam[p.y]);
