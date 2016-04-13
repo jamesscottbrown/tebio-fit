@@ -74,32 +74,41 @@
 
         <div id="splom"></div>
 
-        <p><b>Explanation:</b> This is a matrix of scatterplots of samples from the posterior distribution. Each point
-            corresponds to a choice of parameters that, when simulated, gave a time-series that was "close" to the
-            provided experimental data.</p>
+        <dl class="dl-horizontal">
+            <dt>Explanation</dt>
+            <dd>This is a matrix of scatterplots of samples from the posterior distribution. Each point
+                corresponds to a choice of parameters that, when simulated, gave a time-series that was "close" to the
+                provided experimental data.</dd>
 
-        <p><b>Interactivity:</b> Clicking the button changes the generation for which samples are plotted, and updates
-        the plot of trajectories below. Holding down the mouse allows selection of the points in a rectangular region
-        of any scatterplot; the selected points are highlighted in all scatterplots, and other tajectories are hidden in
-        the trajectory plot.</p>
+            <dt>Interactivity</dt>
+            <dd>Clicking the button changes the generation for which samples are plotted, and updates
+                the plot of trajectories below. Holding down the mouse allows selection of the points in a rectangular region
+                of any scatterplot; the selected points are highlighted in all scatterplots, and other tajectories are hidden in
+                the trajectory plot. </dd>
 
-        <p><b>Interpretation:</b> If uniform priors are applied, the scatterplot axes are scaled to the range of the
-            prior. The proportion of the area covered by the samples thus gives an indication of the <i>factor by which
-                uncertainty in the parameters has been reduced</i> by the experimental observations. Changing between
-            different values of epsilon reveals how this affects the estimated posterior distribution. The pattern in
-            which points are arranged reveals any correlations between the parameters, which are inidicative of problems
-            with identifiability.</p>
+            <dt>Interpretation</dt>
+            <dd>If uniform priors are applied, the scatterplot axes are scaled to the range of the
+                prior. The proportion of the area covered by the samples thus gives an indication of the <i>factor by which
+                    uncertainty in the parameters has been reduced</i> by the experimental observations. Changing between
+                different values of epsilon reveals how this affects the estimated posterior distribution. The pattern in
+                which points are arranged reveals any correlations between the parameters, which are inidicative of problems
+                with identifiability.</dd>
+        </dl>
 
 
         <h2>Simulation Trajectories</h2>
         <div id="timeseries"></div>
 
 
-        <p><b>Explanation:</b> This graph shows time-courses for simulations using the parameters indicate in the
-            scatterplots above. Black crosses indicate the values of the experimental measurements.</p>
+        <dl class="dl-horizontal">
+            <dt>Explanation</dt>
+            <dd>This graph shows time-courses for simulations using the parameters indicate in the
+                scatterplots above. Black crosses indicate the values of the experimental measurements.</dd>
 
-        <p><b>Interactivity:</b> Highlighting points in the scatterplot filters this plot, by hiding trajectories
-            corresponding to points that are not selected. Hovering over a point reveals its value.</p>
+            <dt>Interactivity</dt>
+            <dd>Highlighting points in the scatterplot filters this plot, by hiding trajectories
+                corresponding to points that are not selected. Hovering over a point reveals its value. </dd>
+        </dl>
 
     </div>
 
