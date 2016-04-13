@@ -25,6 +25,22 @@
     <script src="stackedbar.js"></script>
     <script src="distancePlot.js"></script>
     <script src="summaryTable.js"></script>
+    <script src="rateTable.js"></script>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      MathML: {
+        extensions: ["content-mathml.js"]
+      },
+      SVG: {
+        scale: 120
+      }
+
+    });
+    </script>
+    <script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_SVG">
+    </script>
 
 </head>
 
@@ -59,6 +75,8 @@
         <p class="lead">This page compares several candidate models.</p>
 
         <div id="models"></div>
+
+        <div id="modelKinetics"></div>
 
         <div id = "summaryTable"></div>
 
@@ -125,8 +143,7 @@
             global_data = d;
             //model = global_data.models.filter( function(x){ return x.model_name == modelName }  )[0];
             callback();
-        })
-
+        });
     }
     ;
 
