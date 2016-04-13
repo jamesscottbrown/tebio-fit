@@ -117,7 +117,7 @@ function plotErrors(paddedWidth){
                     filteredData[i] = tmp;
                 }
 
-                filteredData.sort(function(a,b){ return a.y > b.y; });
+                filteredData.sort(function(a,b){ return a.y - b.y; });
 
                 // plot
                 plotLine(filteredData);
