@@ -57,22 +57,27 @@
         <p class="lead"> For a comparison of the alternative models,
             see the <a onclick="redirectToOverview();">overview page</a>.</p>
 
+        <div class="row">
         <h2> Model </h2>
         <img id=networkPlaceholder src=""/>
 
         <p>The model can be downloaded in SBML format: <a href id="sbml_link"></a></p>
+        </div>
 
+        <div class="row">
         <h2> Prior Distribution </h2>
 
-        <div id="paramTable" style="float: none;"></div>
+        <div id="paramTable" class="col-md-4 col-md-offset-4"></div>
+        </div>
 
-
+        <div class="row"></div>
         <h2> Posterior Distribution </h2>
         <div id="epsilons">Epsilon values:</div>
 
         <button onclick="toggleHistograms();" id="histogramButton" class = "btn btn-default">Histograms on diagonal</button>
+        </div>
 
-        <div id="splom"></div>
+        <div id="splom" style="float: none; margin: 0 auto;"></div>
 
         <dl class="dl-horizontal">
             <dt>Explanation</dt>
@@ -97,7 +102,7 @@
 
 
         <h2>Simulation Trajectories</h2>
-        <div id="timeseries"></div>
+        <div id="timeseries" style="float: none; margin: 0 auto;"></div>
 
 
         <dl class="dl-horizontal">
