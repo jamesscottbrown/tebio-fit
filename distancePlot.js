@@ -1,4 +1,4 @@
-function plotErrors(){
+function plotErrors(paddedWidth){
 
     var numGenerations = global_data.epsilon_schedule.length;
     var numModels = global_data.models.length;
@@ -6,9 +6,10 @@ function plotErrors(){
 
 
     // Build graphic
-    var paddedWidth = 960,
-        height = 960,
-        padding = 100,
+    console.log("in plotErrors, width is " + width)
+    var height = 500,
+        padding = 75,
+        //paddedWidth = width + padding
         width  = paddedWidth - padding;
 
     // x-axis ranges from 1 to numParticles
