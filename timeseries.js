@@ -2,12 +2,13 @@
 function rangeNotNA(list){
     var min = Infinity, max = -Infinity;
     for (var i=0; i < list.length; i++){
-        if (list[i] < min){ min = list[i]; }
-        if (list[i] > max){ max = list[i]; }
+        if (list[i] == "NA"){ continue; }
+        var element = parseFloat(list[i]);
+
+        if (element < min){ min = element; }
+        if (element > max){ max = element; }
     }
-    var tmp=[];
-    tmp[0]=min; tmp[1] = max;
-    return tmp;
+    return [min, max];
 }
 
 function plotTimeSeries(i) {
@@ -62,6 +63,8 @@ function plotTimeSeries(i) {
         for (var i = 0; i < model.fit.length; i++) {
             tmp = rangeNotNA( global_data.measurements[i] );
 
+            console.log(global_data.measurements[i])
+            console.log("For i=" + i + "range is " + tmp[0] + " " + tmp[1])
             if (tmp[0] < minVal[i]){ minVal[i] = tmp[0]; }
             if (tmp[1] > maxVal[i]){ maxVal[i] = tmp[1]; }
         }
