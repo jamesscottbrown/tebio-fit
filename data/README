@@ -1,0 +1,73 @@
+Copy the directory containing results produced by ABC-sybio into this directory.
+
+Generate a setup.json file using the web interface (http://sysos.eng.ox.ac.uk/tebio/tebiofit-form/) and save it in the subdirectory.
+
+For example, the contents of this directory might be:
+
+data/
+├── README
+└── modelComparison
+    ├── ModelDistribution.txt
+    ├── _data.png
+    ├── compare.png
+    ├── copy
+    │   ├── algorithm_parameter.dat
+    │   ├── kernels_last.dat
+    │   ├── margins_last.dat
+    │   ├── model_last.dat
+    │   ├── params_last.dat
+    │   └── weights_last.dat
+    ├── distance_Population1.txt
+    ├── distance_Population2.txt
+    ├── distance_Population3.txt
+    ├── distance_Population4.txt
+    ├── distance_Population5.txt
+    ├── input_file2.xml
+    ├── mRNAselfReg1.gif
+    ├── mRNAselfReg1.png
+    ├── mRNAselfReg1.sbml
+    ├── mRNAselfReg2.gif
+    ├── mRNAselfReg2.png
+    ├── mRNAselfReg2.sbml
+    ├── rateTable.html
+    ├── rates.txt
+    ├── results_mRNAselfReg1
+    │   ├── Population_1
+    │   │   ├── data_Population1.txt
+    │   │   └── data_Weights1.txt
+    │   ├── Population_2
+    │   │   ├── data_Population2.txt
+    │   │   └── data_Weights2.txt
+    │   ├── Population_3
+    │   │   ├── data_Population3.txt
+    │   │   └── data_Weights3.txt
+    │   ├── Population_4
+    │   │   ├── data_Population4.txt
+    │   │   └── data_Weights4.txt
+    │   └── Population_5
+    │       ├── data_Population5.txt
+    │       └── data_Weights5.txt
+    ├── results_mRNAselfReg2
+    │   ├── Population_1
+    │   │   ├── data_Population1.txt
+    │   │   └── data_Weights1.txt
+    │   ├── Population_2
+    │   │   ├── data_Population2.txt
+    │   │   └── data_Weights2.txt
+    │   ├── Population_3
+    │   │   ├── data_Population3.txt
+    │   │   └── data_Weights3.txt
+    │   ├── Population_4
+    │   │   ├── data_Population4.txt
+    │   │   └── data_Weights4.txt
+    │   └── Population_5
+    │       ├── data_Population5.txt
+    │       └── data_Weights5.txt
+    ├── scatterplot.csv
+    ├── setup.json
+    ├── traj_Population1.txt
+    ├── traj_Population2.txt
+    ├── traj_Population3.txt
+    ├── traj_Population4.txt
+    └── traj_Population5.txt
+
