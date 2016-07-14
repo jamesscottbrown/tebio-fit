@@ -88,7 +88,7 @@ def process_file(path):
 
     # only handles single epsilon schedule
     data = {"epsilon_schedule": element_to_array(soup.select_one("epsilon").select_one("e1")),
-            "particles": element_to_array(soup.select_one("particles"),
+            "particles": element_to_array(soup.select_one("particles")),
             "times": element_to_array(soup.select_one("times")),
             "measurements": process_measurements(soup),
             "models": process_models(soup)}
