@@ -14,7 +14,7 @@ function summariseModelTable() {
         })
         .text(function (d) {
             return d.model_name;
-        })
+        });
 
     d3.select('#models').append("img")
         .attr('src', path + "compare.png");
@@ -35,11 +35,10 @@ function summariseModelTable() {
 
         var dsv = d3.dsv(" ", "text/plain");
         parsedData = dsv.parseRows(rawData);
-
-
+        
         var //width = 480,
             size = 230,
-            padding = 20,
+            padding = 10,
             xPadding = 50,
             bar_thickness = 20,
             full_height = (bar_thickness + padding) * parsedData.length,
@@ -50,15 +49,15 @@ function summariseModelTable() {
             .domain([0, 1]);
 
         var y = d3.scale.linear()
-            .range([0, height - bar_thickness])
-            .domain([0, parsedData[0].length]);
+            .range([0, full_height - bar_thickness])
+            .domain([0, parsedData.length]);
 
         var color = d3.scale.category10()
             .domain([0, parsedData[0].length]);
 
         var svg = d3.select('#modelLikelihood').append('svg')
             .attr("width", width)
-            .attr("height", full_height);
+            .attr("height", full_height + 20);
 
         var xAxis = d3.svg.axis()
             .scale(x)
@@ -99,7 +98,7 @@ function summariseModelTable() {
 
             .enter().append("g")
             .attr("class", "g")
-
+            .attr("class", "row")
             .attr('transform', function (d, i) {
                 return "translate(0," + y(i) + ")";
             });
@@ -153,11 +152,11 @@ function summariseModelTable() {
 
         svg.append("g")
             .attr("class", "x axis")
-            .attr("transform", "translate(0," + (height + 20) + ")")
+            .attr("transform", "translate(0," + (full_height - (bar_thickness + padding)) + ")")
             .call(xAxis);
 
         svg.append("g")
-            .attr("transform", "translate (" +  (width / 2 - 60 ) + "," +  (height + 60) + ")" )
+            .attr("transform", "translate (" +  (width / 2 - 60 ) + "," +  (full_height + 10) + ")" )
             .append("text").text("Model Probability")
             .classed("axis-title", true);
 
