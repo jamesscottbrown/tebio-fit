@@ -24,15 +24,9 @@ function plotTimeSeries(i) {
 
         // Rows encode values: particle number, replicate number, model id, species id, then series
 
-
-
-        var minVal = [], maxVal = [];
-        for (var i = 0; i < model.fit.length; i++) {
-            minVal[i] = Infinity;
-            maxVal[i] = -Infinity;
-        }
-
+        var n = model.fit.length;
         cleanedData = [];
+        var minVal = [], maxVal = [];
         for (var i = 0; i < parsedData.length; i++) {
             raw = parsedData[i];
 
@@ -46,9 +40,18 @@ function plotTimeSeries(i) {
             tmp["data"] = raw.slice(4);
             tmp["data"].length = global_data.times.length; // will truncate to remove spurious "" at end of line
 
+            // If necessary, update count of species, and extend array of max/min values
+            var speciesIndex = tmp["speciesIndex"];
+            if (! minVal[speciesIndex]){
+                minVal[speciesIndex] = Infinity;
+                maxVal[speciesIndex] = -Infinity;
+            }
+            if (speciesIndex > n){
+                n = speciesIndex;
+            }
+
             cleanedData[i] = tmp;
 
-            var speciesIndex = tmp["speciesIndex"];
             var thisMin = Math.min.apply(null, tmp.data);
             if (thisMin < minVal[speciesIndex] ) {
                 minVal[speciesIndex] = thisMin;
@@ -86,17 +89,16 @@ function plotTimeSeries(i) {
         // We need to re-number so we can match up with the trajectories in traj_Population*.txt
         // Need to be careful, as there is a row in this file for each concentration for each particle.
         var prev = cleanedData[0]["particle_number"];
-        var n = 0;
+        var np = 0;
         for (var i = 0; i < cleanedData.length; i++) {
             if (cleanedData[i]["particle_number"] != prev) {
-                n = n + 1;
+                np = np + 1;
                 prev = cleanedData[i]["particle_number"];
             }
-            cleanedData[i]["particle_number_shifted"] = n;
+            cleanedData[i]["particle_number_shifted"] = np;
 
         }
 
-        var n = model.fit.length;
         var endTime = global_data.times[ global_data.times.length - 1 ];
 
 
