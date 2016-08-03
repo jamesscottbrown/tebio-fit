@@ -21,7 +21,7 @@ function plotErrors(paddedWidth, redraw){
             });
     } else {
         var e = e = document.getElementById("max_distance");
-        max_distance = e.options[e.selectedIndex].value;
+        max_distance = parseFloat(e.options[e.selectedIndex].value);
     }
 
     // Build graphic
