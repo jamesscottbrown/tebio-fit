@@ -65,9 +65,6 @@ function plotTimeSeries(i) {
         // Expand range to include time-series
         for (var i = 0; i < model.fit.length; i++) {
             tmp = rangeNotNA( global_data.measurements[i] );
-
-            console.log(global_data.measurements[i])
-            console.log("For i=" + i + "range is " + tmp[0] + " " + tmp[1])
             if (tmp[0] < minVal[i]){ minVal[i] = tmp[0]; }
             if (tmp[1] > maxVal[i]){ maxVal[i] = tmp[1]; }
         }
