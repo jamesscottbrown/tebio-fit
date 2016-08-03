@@ -1,12 +1,30 @@
-function plotErrors(paddedWidth){
+function plotErrors(paddedWidth, redraw){
 
     var numGenerations = global_data.epsilon_schedule.length;
     var numModels = global_data.models.length;
     var numParticles = global_data.particles;
 
+    // If drawing for the first time, create the 'max distance to plot' drop-down menu
+    // Otherwise, adjust y-axis to selected value
+    var max_distance = global_data.epsilon_schedule[0];
+    if (redraw === false) {
+        d3.select("#max_distance")
+            .selectAll("option")
+            .data(global_data.epsilon_schedule)
+            .enter()
+            .append("option")
+            .text(function (d) {
+                return d;
+            })
+            .attr("value", function (d) {
+                return d;
+            });
+    } else {
+        var e = e = document.getElementById("max_distance");
+        max_distance = e.options[e.selectedIndex].value;
+    }
 
     // Build graphic
-    console.log("in plotErrors, width is " + width)
     var height = 500,
         padding = 75,
         //paddedWidth = width + padding
@@ -26,7 +44,7 @@ function plotErrors(paddedWidth){
     // y axis ranges from 0 to max epsilon
     var y = d3.scale.linear()
         .range([height - padding / 2, padding / 2])
-        .domain([0, global_data.epsilon_schedule[0]]);
+        .domain([0, max_distance]);
 
     var yAxis = d3.svg.axis()
         .scale(y)
@@ -53,7 +71,7 @@ function plotErrors(paddedWidth){
     svg.append("text")
         .attr("transform", "rotate(-90,0,0) translate(-" + (height + padding) / 2 + ", 0)") // TODO: fiddle with this
         .text("Distance")
-        .classed("axis-title", true);;
+        .classed("axis-title", true);
 
 
     // add x-axis and label
@@ -71,6 +89,7 @@ function plotErrors(paddedWidth){
 
 
     for (var generation = 1; generation <= numGenerations; generation++){
+        if (global_data.epsilon_schedule[generation-1] > max_distance ){ continue; }
         processLine(generation);
 
         // plot reference line
@@ -138,7 +157,7 @@ function plotErrors(paddedWidth){
             .enter()
             .append("path")
             .attr("d", d3.svg.symbol().type('circle') )
-            .attr("transform", function(d, i){ console.log(color(d.modelNum)); return "translate (" + x(i) + ", " + y(d.y) + ")";}  )
+            .attr("transform", function(d, i){ return "translate (" + x(i) + ", " + y(d.y) + ")";}  )
             .classed("epsilon" + filteredData[0].epsilon, "true" )
             .classed("epsilon-points", "true" );
 

@@ -103,6 +103,14 @@
         <div id="errors"></div>
 
         <dl class="dl-horizontal">
+            <form>
+            <div class="form-group">
+                <label for="max_distance">Only plot iterations after epsilon has reached:</label>
+                <select id="max_distance" name="max_distance" onchange="plotErrors(width, true)"></select>
+            </div>
+            </form>
+
+
             <dt>Explanation</dt>
             <dd>Each horizontal dashed line represents the value of the threshold $\epsilon$ for a
                 generation. Each point represents the value of $d(x, x_0)$ for a single particle. Lines join the points
@@ -159,7 +167,6 @@
             callback();
         });
     }
-    ;
 
 
     function setup_page() {
@@ -170,10 +177,9 @@
     function fill_placeholders() {
         summariseModelTable();
         summaryTable();
-        plotErrors(width);
+        plotErrors(width, false);
         fillRateTable();
     }
-    ;
 
     window.onLoad = setup_page();
 
