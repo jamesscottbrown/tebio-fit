@@ -35,7 +35,7 @@ function summariseModelTable() {
 
         var dsv = d3.dsv(" ", "text/plain");
         parsedData = dsv.parseRows(rawData);
-        
+
         var //width = 480,
             size = 230,
             padding = 10,
@@ -137,6 +137,7 @@ function summariseModelTable() {
             })
             .enter()
             .append("text")
+            .filter( function(d){return d.model_name == global_data.models[0].model_name; })
             .text(function (d, i) {
                 return d.epsilon;
             })
