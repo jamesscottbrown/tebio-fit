@@ -63,7 +63,7 @@ function plotTimeSeries(i) {
         }
 
         // Expand range to include time-series
-        for (var i = 0; i < model.fit.length; i++) {
+        for (var i = 0; i < n; i++) {
             tmp = rangeNotNA( global_data.measurements[i] );
             if (tmp[0] < minVal[i]){ minVal[i] = tmp[0]; }
             if (tmp[1] > maxVal[i]){ maxVal[i] = tmp[1]; }
@@ -110,7 +110,7 @@ function plotTimeSeries(i) {
             .domain([0, endTime ]);
 
         var yScales = [], yAxes = [];
-        for (var i = 0; i < model.fit.length; i++) {
+        for (var i = 0; i < n; i++) {
             tmp = d3.scale.linear()
                 .range([size - padding / 2, padding / 2])
                 .domain([minVal[i], maxVal[i]]);
@@ -155,7 +155,7 @@ function plotTimeSeries(i) {
 
 
         // construct reference lines
-        for (var species=0; species < model.fit.length; species++){
+        for (var species=0; species < n; species++){
 
             var y = yScales[species];
 
