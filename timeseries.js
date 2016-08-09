@@ -62,6 +62,13 @@ function plotTimeSeries(i) {
             }
         }
 
+        // Expand out model.fit array if necessary (because it was specified as 'None')
+        if (model.fit.length < n){
+            for (var i = 0; i < n; i++){
+                model.fit[i] = "Species " + toString(i);
+            }
+        }
+
         // Expand range to include time-series
         for (var i = 0; i < n; i++) {
             tmp = rangeNotNA( global_data.measurements[i] );
