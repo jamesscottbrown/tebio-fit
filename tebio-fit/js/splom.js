@@ -96,7 +96,10 @@ function toggleHistograms(){
     });
     var canceled = !target.dispatchEvent(event);
 
+function getDomain(param){
+    return d3.extent([+param.min, +param.max]);
 }
+
 
 function plotSPLOM(dataURL, generation) {
     var width = 960,
@@ -133,19 +136,11 @@ function plotSPLOM(dataURL, generation) {
             parsedData[i]["generation"] = generation;
         }
 
-        var domainByParam = {},
-            params = model.params.filter(function (x) {
+        var params = model.params.filter(function (x) {
                 return x.type != "constant";
             }),
             n = params.length;
 
-        for (var i = 0; i < n; i++) {
-            domainByParam[params[i]] = d3.extent([model.params[i].min, model.params[i].max])
-        }
-
-        //params.forEach(function(param) {
-        //  domainByParam[param] = d3.extent(data, function(d) { return d[param]; });
-        //});
 
         xAxis.tickSize(size * n);
         yAxis.tickSize(-size * n);
@@ -173,7 +168,7 @@ function plotSPLOM(dataURL, generation) {
                 return "translate(" + (n - i - 1) * size + ",0)";
             })
             .each(function (d) {
-                x.domain(domainByParam[d]);
+                x.domain(getDomain(d));
                 d3.select(this).call(xAxis);
             });
 
@@ -185,7 +180,7 @@ function plotSPLOM(dataURL, generation) {
                 return "translate(0," + i * size + ")";
             })
             .each(function (d) {
-                y.domain(domainByParam[d]);
+                y.domain(getDomain(d));
                 d3.select(this).call(yAxis);
             });
 
@@ -223,7 +218,7 @@ function plotSPLOM(dataURL, generation) {
 
             var cell = d3.select(thisCell);
 
-            x.domain(domainByParam[p.x]);
+            x.domain(getDomain(p.x));
 
             cell.append("rect")
                 .attr("class", "frame")
@@ -266,8 +261,8 @@ function plotSPLOM(dataURL, generation) {
 
             var cell = d3.select(thisCell);
 
-            x.domain(domainByParam[p.x]);
-            y.domain(domainByParam[p.y]);
+            x.domain(getDomain(p.x));
+            y.domain(getDomain(p.y));
 
             cell.append("rect")
                 .attr("class", "frame")
@@ -297,8 +292,8 @@ function plotSPLOM(dataURL, generation) {
         function brushstart(p) {
             if (brushCell !== this) {
                 d3.select(brushCell).call(brush.clear());
-                x.domain(domainByParam[p.x]);
-                y.domain(domainByParam[p.y]);
+                x.domain(getDomain(p.x));
+                y.domain(getDomain(p.y));
                 brushCell = this;
             }
         }
