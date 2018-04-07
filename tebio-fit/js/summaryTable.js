@@ -7,7 +7,7 @@ function summaryTable() {
 
         var dsv = d3.dsv(" ", "text/plain");
 
-        rawData = rawData.replace('[', '', 'g').replace(']', '', 'g').replace('  ', ' ', 'g');
+        rawData = rawData.replace(/\[/g, '').replace(/]/g, '').replace(/  /g, ' ');
 
         var parsedData = dsv.parseRows(rawData);
 
