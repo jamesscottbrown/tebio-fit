@@ -109,13 +109,13 @@ function plotTimeSeries(i) {
 
 
         // Build graphic
-        var paddedWidth = 960,
+        var paddedWidth = width,
             size = 230,
             padding = 100,
-            width  = paddedWidth - padding;
+            innerWidth  = paddedWidth - padding;
 
         var x = d3.scale.linear()
-            .range([padding / 2, width - padding / 2])
+            .range([padding / 2, innerWidth - padding / 2])
             .domain([0, endTime ]);
 
         var yScales = [], yAxes = [];

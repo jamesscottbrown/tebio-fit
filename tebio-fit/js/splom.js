@@ -117,7 +117,7 @@ function plotParcoords(parsedData, n, params){
     var pc = d3.parcoords()("#parcoords")
         .data(subData)
         .alpha(0.2)
-        .width(1200).height(500) // We need to set this, becuase parent DIV collapses to 0x0 when folded, causing drawing to fail
+        .width(width).height(500) // We need to set this, becuase parent DIV collapses to 0x0 when folded, causing drawing to fail
         .margin({top: 24, left: 0, bottom: 12, right: 0})
         .render()
         .reorderable()
@@ -134,10 +134,8 @@ function plotSPLOM(dataURL, generation) {
         padding = 20;
 
     var x = d3.scale.linear()
-        .range([padding / 2, size - padding / 2]);
 
     var y = d3.scale.linear()
-        .range([size - padding / 2, padding / 2]);
 
     var xAxis = d3.svg.axis()
         .scale(x)
@@ -167,6 +165,10 @@ function plotSPLOM(dataURL, generation) {
                 return x.type !== "constant";
             }),
             n = params.length;
+
+        size = (width - (n-1)*padding) / n;
+        x.range([padding / 2, size - padding / 2]);
+        y.range([size - padding / 2, padding / 2]);
 
         plotParcoords(parsedData, n, params);
 
