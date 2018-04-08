@@ -114,6 +114,7 @@ function plotErrors(paddedWidth, redraw){
 
             var dsv = d3.dsv(" ", "text/plain");
             var parsedData = dsv.parseRows(rawData);
+            parsedData = parsedData.map(function(d){ return [+d[0], +d[1], d[2].replace('[', '').replace(']', ''), +d[3]] });
 
             // filter to get particles for this model only
             for (var modelNum = 0; modelNum < numModels; modelNum++) {
@@ -126,7 +127,6 @@ function plotErrors(paddedWidth, redraw){
                 var filteredData = [];
                 for (var i=0; i < thisModelData.length; i++){
                     var error = thisModelData[i][2];
-                    error = error.replace('[', '').replace(']', '');
 
                     var tmp = [];
                     tmp.y = parseFloat(error);
