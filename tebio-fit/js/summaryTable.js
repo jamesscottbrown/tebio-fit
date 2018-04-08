@@ -38,7 +38,7 @@ function summaryTable() {
             .enter()
             .append("tr");
 
-        var cells = rows.selectAll("td")
+        rows.selectAll("td")
             .data(function (row) {
                 // callback must return data in format:
                 // {name: "p5", type: "uniform", min: 0, max: 30}

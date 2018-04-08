@@ -27,7 +27,7 @@ function paramTable() {
         .append("tr");
 
 
-    var cells = rows.selectAll("td")
+    rows.selectAll("td")
         .data(function (row) {
             // callback must return data in format:
             // {name: "p5", type: "uniform", min: 0, max: 30}
@@ -102,8 +102,7 @@ function getDomain(param){
 
 
 function plotSPLOM(dataURL, generation) {
-    var width = 960,
-        size = 230,
+    var size = 230,
         padding = 20;
 
     var x = d3.scale.linear()
@@ -137,7 +136,7 @@ function plotSPLOM(dataURL, generation) {
         }
 
         var params = model.params.filter(function (x) {
-                return x.type != "constant";
+                return x.type !== "constant";
             }),
             n = params.length;
 
@@ -194,7 +193,7 @@ function plotSPLOM(dataURL, generation) {
             });
         
         cell.each( function (d){
-                if ( drawHistograms && d.x == d.y){
+                if ( drawHistograms && d.x === d.y){
                     plotHist(d, this);
                 } else {
                     plot(d, this);
@@ -249,10 +248,9 @@ function plotSPLOM(dataURL, generation) {
                 .attr("x", 1)
                 .attr("width", x(data[0].dx) - 1)
                 .attr("height", function(d) { return (size - padding/2) - y(d.y); })
-                .style("fill", function (d) {
+                .style("fill", function () {
                     return color(parsedData[0].generation);
                 });
-            ;
 
         }
 

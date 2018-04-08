@@ -20,7 +20,7 @@ function plotErrors(paddedWidth, redraw){
                 return d;
             });
     } else {
-        var e = e = document.getElementById("max_distance");
+        var e = document.getElementById("max_distance");
         max_distance = parseFloat(e.options[e.selectedIndex].value);
     }
 
@@ -118,7 +118,7 @@ function plotErrors(paddedWidth, redraw){
             // filter to get particles for this model only
             for (var modelNum = 0; modelNum < numModels; modelNum++) {
                 var thisModelData = parsedData.filter(function (d) {
-                    return d[3] == modelNum;
+                    return d[3] === modelNum;
                 });
 
 
@@ -164,11 +164,11 @@ function plotErrors(paddedWidth, redraw){
             points.on("mouseover",
                 function(d){
                     svg.selectAll(".epsilon-points")
-                        .classed("unselected", function(d2){ return d.epsilon != d2.epsilon; })
+                        .classed("unselected", function(d2){ return d.epsilon !== d2.epsilon; })
                     ;
                 })
                 .on("mouseout",
-                function(d){
+                function(){
                     svg.selectAll(".epsilon-points").classed("unselected", false);
                 });
 

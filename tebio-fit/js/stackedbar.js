@@ -21,7 +21,7 @@ function summariseModelTable() {
 
 
     var numModels = global_data.models.length;
-    if (numModels == 1){
+    if (numModels === 1){
         d3.select(".lead").text("This page is intended to compare models, but only one was provided:")
     } else {
         d3.select(".lead").text("This page compares " + numModels.toString() + " models:")
@@ -37,7 +37,6 @@ function summariseModelTable() {
         parsedData = dsv.parseRows(rawData);
 
         var //width = 480,
-            size = 230,
             padding = 10,
             xPadding = 50,
             bar_thickness = 20,
@@ -73,13 +72,13 @@ function summariseModelTable() {
         for (var i = 0; i < parsedData.length; i++) {
             data[i] = [];
             for (var j = 0; j < parsedData[i].length; j++) {
-                if (parsedData[i][j] == "") {
+                if (parsedData[i][j] === "") {
                     continue;
                 }
                 tmp = [];
                 tmp["val"] = Number(parsedData[i][j]);
 
-                if (j == 0) {
+                if (j === 0) {
                     tmp["cumSum"] = 0;
                 } else {
                     tmp["cumSum"] = data[i][j - 1].cumSum + Number(parsedData[i][j - 1]);
@@ -105,15 +104,15 @@ function summariseModelTable() {
 
 
         var bars = row.selectAll("rect")
-            .data(function (d, i) {
+            .data(function (d) {
                 return d;
             })
             .enter()
             .append('rect')
-            .attr('x', function (d, i) {
+            .attr('x', function (d) {
                 return x(d.cumSum);
             })
-            .attr('width', function (d, i) {
+            .attr('width', function (d) {
                 return x(d.val);
             })
             .attr('height', 20)
@@ -132,13 +131,13 @@ function summariseModelTable() {
         );
 
         row.selectAll("text")
-            .data(function (d, i) {
+            .data(function (d) {
                 return d;
             })
             .enter()
             .append("text")
-            .filter( function(d){return d.model_name == global_data.models[0].model_name; })
-            .text(function (d, i) {
+            .filter( function(d){return d.model_name === global_data.models[0].model_name; })
+            .text(function (d) {
                 return d.epsilon;
             })
             .attr("y", bar_thickness / 2)

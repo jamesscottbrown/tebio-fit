@@ -4,7 +4,7 @@ function rangeNotNA(list){
 
     var min = Infinity, max = -Infinity;
     for (var i=0; i < list.length; i++){
-        if (list[i] == "NA"){ continue; }
+        if (list[i] === "NA"){ continue; }
         var element = parseFloat(list[i]);
 
         if (element < min){ min = element; }
@@ -81,13 +81,13 @@ function plotTimeSeries(i) {
         // Filter out results from different model
         var modelIndex;
         for (var i = 0; i < global_data.models.length; i++) {
-            if (global_data.models[i].model_name == model.model_name) {
+            if (global_data.models[i].model_name === model.model_name) {
                 modelIndex = i;
             }
         }
 
         var cleanedData = cleanedData.filter(function (d) {
-            return d.modelIndex == modelIndex;
+            return d.modelIndex === modelIndex;
         });
 
         // We need to re-number
@@ -97,7 +97,7 @@ function plotTimeSeries(i) {
         var prev = cleanedData[0]["particle_number"];
         var np = 0;
         for (var i = 0; i < cleanedData.length; i++) {
-            if (cleanedData[i]["particle_number"] != prev) {
+            if (cleanedData[i]["particle_number"] !== prev) {
                 np = np + 1;
                 prev = cleanedData[i]["particle_number"];
             }
@@ -148,7 +148,7 @@ function plotTimeSeries(i) {
             .attr("transform", "translate(" + padding + "," + padding / 2 + ")");
 
 
-        var cell = svg.selectAll(".cell")
+        svg.selectAll(".cell")
             .data(model.fit)
             .enter().append("g")
             .attr("class", "cell")
@@ -194,7 +194,7 @@ function plotTimeSeries(i) {
             var group = cell.append("g")
                 .attr("class", "refline");
 
-            var points2 = group.selectAll("path")
+            group.selectAll("path")
                 .data(refLineData)
                 .enter()
                 .append("path")
@@ -211,7 +211,7 @@ function plotTimeSeries(i) {
         function plot(speciesName){
             // filter to remove other species
             var thisSpecies = cleanedData.filter(function (d) {
-                return d.speciesName == speciesName
+                return d.speciesName === speciesName
             });
 
             var cell = d3.select("#" + speciesName.replace('+', '_'));
@@ -250,7 +250,7 @@ function plotTimeSeries(i) {
                 .attr("cx", function (d, i) {
                     return x(global_data.times[i]);
                 })
-                .attr("cy", function (d, i) {
+                .attr("cy", function (d) {
                     return y(d.y);
                 })
                 .attr("r", 5)
@@ -266,22 +266,22 @@ function plotTimeSeries(i) {
 
             // add line
             var line = d3.svg.line()
-                .x(function (d, i) {
+                .x(function (d) {
                     return x(global_data.times[d.x]);
                 })
-                .y(function (d, i) {
+                .y(function (d) {
                     return y(d.y);
                 });
             //.y( function (d){ return y(d.y); });
 
             groups.append("path")
-                .attr("d", function (d, i) {
+                .attr("d", function (d) {
                     var processed = [];
                     for (var j = 0; j < d.data.length; j++) {
                         tmp = [];
                         tmp["x"] = j;
                         tmp["y"] = d.data[j];
-                        if (d.data[j] == "") {
+                        if (d.data[j] === "") {
                             continue;
                         }
                         processed[j] = tmp;
@@ -291,7 +291,7 @@ function plotTimeSeries(i) {
                 .attr("class", "timeseries-line")
                 .style('stroke', function (d, i) {
                     return color(i);
-                })
+                });
 
             // add axis
             cell.append("g")
@@ -305,7 +305,7 @@ function plotTimeSeries(i) {
 
             cell.append("text")
                 .attr("transform", "rotate(-90,0,0) translate(-" + (size + padding) / 2 + ", 0)") // TODO: fiddle with this
-                .text(function (d, i) {
+                .text(function (d) {
                     return d;
                 });
 
@@ -328,7 +328,7 @@ function highlightTimeSeries() {
 
 // unselect the ones that are unselected
     d3.select("#timeseries").select("svg").selectAll(".trajectory").classed("trajectory-not-selected", function (d) {
-        return unselectedParticles.indexOf(d.particle_number_shifted) != -1;
+        return unselectedParticles.indexOf(d.particle_number_shifted) !== -1;
 
     });
 }

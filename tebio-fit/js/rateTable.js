@@ -6,9 +6,8 @@ function fillRateTable() {
     http.send(null);
 
     function handleResponse() {
-        if (http.readyState == 4) {
-            var response = http.responseText;
-            document.getElementById('modelKinetics').innerHTML=response;
+        if (http.readyState === 4) {
+            document.getElementById('modelKinetics').innerHTML = http.responseText;
         }
     }
 }
