@@ -1,5 +1,7 @@
 
 function rangeNotNA(list){
+    if (!list){ list = []; }
+
     var min = Infinity, max = -Infinity;
     for (var i=0; i < list.length; i++){
         if (list[i] == "NA"){ continue; }
@@ -31,10 +33,10 @@ function plotTimeSeries(i) {
             raw = parsedData[i];
 
             tmp = [];
-            tmp["particle_number"] = raw[0];
-            tmp["replicate"] = raw[1];
-            tmp["modelIndex"] = Number(raw[2]);
-            tmp["speciesIndex"] = raw[3];
+            tmp["particle_number"] = +raw[0];
+            tmp["replicate"] = +raw[1];
+            tmp["modelIndex"] = +raw[2];
+            tmp["speciesIndex"] = +raw[3];
             tmp["speciesName"] = model.fit[tmp["speciesIndex"]];
 
             tmp["data"] = raw.slice(4);
@@ -42,7 +44,7 @@ function plotTimeSeries(i) {
 
             // If necessary, update count of species, and extend array of max/min values
             var speciesIndex = tmp["speciesIndex"];
-            if (! minVal[speciesIndex]){
+            if (minVal.length <= speciesIndex){
                 minVal[speciesIndex] = Infinity;
                 maxVal[speciesIndex] = -Infinity;
             }
@@ -64,8 +66,8 @@ function plotTimeSeries(i) {
 
         // Expand out model.fit array if necessary (because it was specified as 'None')
         if (model.fit.length < n){
-            for (var i = 0; i < n; i++){
-                model.fit[i] = "Species " + toString(i);
+            for (var i = 0; i <= n; i++){
+                model.fit[i] = "Species" + i.toString();
             }
         }
 
@@ -167,10 +169,16 @@ function plotTimeSeries(i) {
             var y = yScales[species];
 
             var refLineData = [];
-            for (var t=0; t < global_data.measurements[species].length; t++){
+
+            var measurements = [];
+            if (global_data.measurements.length > species){
+                measurements = global_data.measurements[species];
+            }
+
+            for (var t=0; t < measurements.length; t++){
                 var tmp=[];
                 tmp["x"] = global_data.times[t];
-                tmp["y"] = global_data.measurements[species][t];
+                tmp["y"] = measurements[t];
 
                 if ( tmp["y"] !== "NA"){
                     refLineData[ refLineData.length ] = tmp;
