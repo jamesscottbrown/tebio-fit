@@ -96,6 +96,30 @@ function toggleHistograms(){
     });
     var canceled = !target.dispatchEvent(event);
 
+}
+
+function plotParcoords(parsedData, n, params){
+    var subData = parsedData.map(function (d) {
+        var values = {};
+        for (var i = 0; i < n; i++) {
+            var param = params[i];
+            values[param.name] = (d[param.column]);
+        }
+        return values;
+    });
+
+
+    d3.select("#parcoords").node().innerHTML = "";
+    var pc = d3.parcoords()("#parcoords")
+        .data(subData)
+        .alpha(0.2)
+        .width(1200).height(500) // We need to set this, becuase parent DIV collapses to 0x0 when folded, causing drawing to fail
+        .margin({top: 24, left: 0, bottom: 12, right: 0})
+        .render()
+        .reorderable()
+        .brushMode("1D-axes");  // enable brushing
+}
+
 function getDomain(param){
     return d3.extent([+param.min, +param.max]);
 }
@@ -140,6 +164,7 @@ function plotSPLOM(dataURL, generation) {
             }),
             n = params.length;
 
+        plotParcoords(parsedData, n, params);
 
         xAxis.tickSize(size * n);
         yAxis.tickSize(-size * n);
