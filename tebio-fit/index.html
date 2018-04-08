@@ -59,80 +59,100 @@
         <p class="lead"> For a comparison of the alternative models,
             see the <a onclick="redirectToOverview();">overview page</a>.</p>
 
-        <div class="row">
-        <h2> Model </h2>
-        <img id=networkPlaceholder src=""/>
 
-        <p>The model can be downloaded in SBML format: <a href id="sbml_link"></a></p>
-        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#model-concertina">Model</a>
+                </h4>
+            </div>
+            <div id="model-concertina" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <div class="row">
+                        <h2> Model </h2>
+                        <img id=networkPlaceholder src=""/>
 
-        <div class="row">
-        <h2> Prior Distribution </h2>
+                        <p>The model can be downloaded in SBML format: <a href id="sbml_link"></a></p>
+                    </div>
 
-        <div id="paramTable" class="col-md-4 col-md-offset-4"></div>
+                    <div class="row">
+                        <h2> Prior Distribution </h2>
+
+                        <div id="paramTable" class="col-md-4 col-md-offset-4"></div>
+                    </div>
+
+                </div>
+            </div>
         </div>
 
         <div class="row"></div>
         <h2> Posterior Distribution </h2>
         <div id="epsilons">Epsilon values:</div>
 
-        <button onclick="toggleHistograms();" id="histogramButton" class = "btn btn-default">Histograms on diagonal</button>
+        <button onclick="toggleHistograms();" id="histogramButton" class="btn btn-default">Histograms on diagonal
+        </button>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#graph-concertina-1">Scatterplot</a>
+            </h4>
         </div>
+        <div id="graph-concertina-1" class="panel-collapse collapse">
+
+
+            <div id="splom" style="float: none; margin: 0 auto;"></div>
 
             <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#graph-concertina-1">Scatterplot</a>
-                </h4>
-            </div>
-            <div id="graph-concertina-1" class="panel-collapse collapse">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#help-concertina-1">Help</a>
+                    </h4>
+                </div>
+                <div id="help-concertina-1" class="panel-collapse collapse">
+                    <div class="panel-body">
 
+                        <dl class="dl-horizontal">
+                            <dt>Explanation</dt>
+                            <dd>This is a matrix of scatterplots of samples from the posterior distribution. Each point
+                                corresponds to a choice of parameters that, when simulated, gave a time-series that was
+                                "close"
+                                to the provided experimental data.
+                            </dd>
 
-        <div id="splom" style="float: none; margin: 0 auto;"></div>
+                            <dt>Interactivity</dt>
+                            <dd>Clicking the button changes the generation for which samples are plotted, and updates
+                                the plot of trajectories below. Holding down the mouse allows selection of the points in
+                                a
+                                rectangular region
+                                of any scatterplot; the selected points are highlighted in all scatterplots, and other
+                                tajectories are hidden in the trajectory plot.
+                            </dd>
 
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#help-concertina-1">Help</a>
-                </h4>
-            </div>
-            <div id="help-concertina-1" class="panel-collapse collapse">
-                <div class="panel-body">
+                            <dt>Interpretation</dt>
+                            <dd>If uniform priors are applied, the scatterplot axes are scaled to the range of the
+                                prior. The proportion of the area covered by the samples thus gives an indication of the
+                                <i>factor
+                                    by which
+                                    uncertainty in the parameters has been reduced</i> by the experimental observations.
+                                Changing between
+                                different values of epsilon reveals how this affects the estimated posterior
+                                distribution. The
+                                pattern in
+                                which points are arranged reveals any correlations between the parameters, which are
+                                inidicative
+                                of problems
+                                with identifiability.
+                            </dd>
+                        </dl>
 
-                    <dl class="dl-horizontal">
-                        <dt>Explanation</dt>
-                        <dd>This is a matrix of scatterplots of samples from the posterior distribution. Each point
-                            corresponds to a choice of parameters that, when simulated, gave a time-series that was "close"
-                            to the provided experimental data.
-                        </dd>
-
-                        <dt>Interactivity</dt>
-                        <dd>Clicking the button changes the generation for which samples are plotted, and updates
-                            the plot of trajectories below. Holding down the mouse allows selection of the points in a
-                            rectangular region
-                            of any scatterplot; the selected points are highlighted in all scatterplots, and other
-                            tajectories are hidden in the trajectory plot.
-                        </dd>
-
-                        <dt>Interpretation</dt>
-                        <dd>If uniform priors are applied, the scatterplot axes are scaled to the range of the
-                            prior. The proportion of the area covered by the samples thus gives an indication of the <i>factor
-                                by which
-                                uncertainty in the parameters has been reduced</i> by the experimental observations.
-                            Changing between
-                            different values of epsilon reveals how this affects the estimated posterior distribution. The
-                            pattern in
-                            which points are arranged reveals any correlations between the parameters, which are inidicative
-                            of problems
-                            with identifiability.
-                        </dd>
-                    </dl>
-
+                    </div>
                 </div>
             </div>
-        </div>
 
-            </div></div>
+        </div>
+    </div>
 
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -141,44 +161,58 @@
             </h4>
         </div>
         <div id="graph-concertina-2" class="panel-collapse collapse in">
-      <div class="panel-body">
-          <div id="parcoords" class="parcoords" style="width:1200px;height:500px"></div>
-      </div>
+            <div class="panel-body">
+                <div id="parcoords" class="parcoords" style="width:1200px;height:500px"></div>
+            </div>
 
         </div>
     </div>
 
 
-
-    <h2>Simulation Trajectories</h2>
-        <div id="timeseries" style="float: none; margin: 0 auto;"></div>
-
     <div class="panel panel-default">
-                <div class="panel-heading">
-                  <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#help-concertina-2">Help</a>
-                  </h4>
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#graph-concertina-3">Simulation Trajectories</a>
+            </h4>
+        </div>
+        <div id="graph-concertina-3" class="panel-collapse collapse">
+            <div class="panel-body">
+
+                <h2>Simulation Trajectories</h2>
+                <div id="timeseries" style="float: none; margin: 0 auto;"></div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" href="#help-concertina-2">Help</a>
+                        </h4>
+                    </div>
+                    <div id="help-concertina-2" class="panel-collapse collapse">
+                        <div class="panel-body">
+
+                            <dl class="dl-horizontal">
+                                <dt>Explanation</dt>
+                                <dd>This graph shows time-courses for simulations using the parameters indicate in the
+                                    scatterplots above. Black crosses indicate the values of the experimental
+                                    measurements.
+                                </dd>
+
+                                <dt>Interactivity</dt>
+                                <dd>Highlighting points in the scatterplot filters this plot, by hiding trajectories
+                                    corresponding to points that are not selected. Hovering over a point reveals its
+                                    value.
+                                </dd>
+                            </dl>
+
+                        </div>
+                    </div>
                 </div>
-                <div id="help-concertina-2" class="panel-collapse collapse">
-                  <div class="panel-body">
-
-                    <dl class="dl-horizontal">
-                        <dt>Explanation</dt>
-                        <dd>This graph shows time-courses for simulations using the parameters indicate in the
-                            scatterplots above. Black crosses indicate the values of the experimental measurements.</dd>
-
-                        <dt>Interactivity</dt>
-                        <dd>Highlighting points in the scatterplot filters this plot, by hiding trajectories
-                            corresponding to points that are not selected. Hovering over a point reveals its value. </dd>
-                    </dl>
-
-                  </div>
-                </div>
-              </div>
-
-
-
+            </div>
+        </div>
     </div>
+
+
+</div>
 
 </div><!-- /.container -->
 
@@ -199,9 +233,9 @@
     function getUrlVars() {
         var vars = {};
         var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,
-                function (m, key, value) {
-                    vars[key] = value;
-                });
+            function (m, key, value) {
+                vars[key] = value;
+            });
         return vars;
     }
 
@@ -212,10 +246,10 @@
         path = "data/" + experiment + "/";
 
 
-        if (!experiment){
+        if (!experiment) {
             var url = window.location.href;
             window.location = url.replace('index.html', 'about.html');
-        } else if (!modelName){
+        } else if (!modelName) {
             var url = window.location.href;
             window.location = url.replace('index.html', 'comparison.html');
         }
@@ -268,7 +302,6 @@
     }
 
     window.onLoad = setup_page();
-
 
 
 </script>
