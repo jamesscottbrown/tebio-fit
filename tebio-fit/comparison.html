@@ -74,12 +74,25 @@
 
         <p class="lead">This page compares several candidate models.</p>
 
-        <div class="row">
-        <div id="models" class="col-md-4 col-md-offset-4"></div>
-        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#concertina-models-details">Model details</a>
+                </h4>
+            </div>
+            <div id="concertina-models-details" class="panel-collapse collapse">
+                <div class="panel-body">
 
-        <div class="row">
-        <div id="modelKinetics" class="col-md-4 col-md-offset-4"></div>
+                    <div class="row">
+                        <div id="models" class="col-md-4 col-md-offset-4"></div>
+                    </div>
+
+                    <div class="row">
+                        <div id="modelKinetics" class="col-md-4 col-md-offset-4"></div>
+                    </div>
+
+                </div>
+            </div>
         </div>
 
         <div class="row">
@@ -88,21 +101,35 @@
 
         <div id="modelLikelihood"></div>
 
-        <dl class="dl-horizontal">
-            <dt>Explanation</dt>
-            <dd>Each row represents a different generation, with a different value of epsilon.
-                The width of the constituitive bars indicates the probability of each model, estimated using the samples
-                from that generation.</dd>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#help-concertina-stackedbar">Help</a>
+                </h4>
+            </div>
+            <div id="help-concertina-stackedbar" class="panel-collapse collapse">
+                <div class="panel-body">
 
-            <dt>Interactivity</dt>
-            <dd>Hovering over a point displays the name of the corresponding model and its probability. Clicking on a bar
-                navigates to the a view of the samples obtained for the corresponding model and generation. </dd>
-        </dl>
+                    <dl class="dl-horizontal">
+                        <dt>Explanation</dt>
+                        <dd>Each row represents a different generation, with a different value of epsilon.
+                            The width of the constituitive bars indicates the probability of each model, estimated using
+                            the samples
+                            from that generation.
+                        </dd>
 
+                        <dt>Interactivity</dt>
+                        <dd>Hovering over a point displays the name of the corresponding model and its probability.
+                            Clicking on a bar
+                            navigates to the a view of the samples obtained for the corresponding model and generation.
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
 
         <div id="errors"></div>
 
-        <dl class="dl-horizontal">
             <form>
             <div class="form-group">
                 <label for="max_distance">Only plot points for epsilon below:</label>
@@ -110,21 +137,40 @@
             </div>
             </form>
 
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#help-concertina-particlerank">Help</a>
+                </h4>
+            </div>
+            <div id="help-concertina-particlerank" class="panel-collapse collapse">
+                <div class="panel-body">
 
-            <dt>Explanation</dt>
-            <dd>Each horizontal dashed line represents the value of the threshold $\epsilon$ for a
-                generation. Each point represents the value of $d(x, x_0)$ for a single particle. Lines join the points
-                representing particles from the same model and generation.</dd>
+                    <dl class="dl-horizontal">
 
-            <dt>Interactivity</dt>
-            <dd>mousing over a point highlights all points from the same generation. Hovering over a
-                point displays the distance for that point</dd>
+                        <dt>Explanation</dt>
+                        <dd>Each horizontal dashed line represents the value of the threshold $\epsilon$ for a
+                            generation. Each point represents the value of $d(x, x_0)$ for a single particle. Lines join
+                            the points
+                            representing particles from the same model and generation.
+                        </dd>
 
-            <dt>Interpretation</dt>
-            <dd>For each generation, two things are apparent from the graph: how many particles correspond to each model
-                (indicated by how far curves extend to the right), and how well the particles from each model match the
-                experimental measurements (indicated by how far curves extend downwards).</dd>
-        </dl>
+                        <dt>Interactivity</dt>
+                        <dd>mousing over a point highlights all points from the same generation. Hovering over a
+                            point displays the distance for that point
+                        </dd>
+
+                        <dt>Interpretation</dt>
+                        <dd>For each generation, two things are apparent from the graph: how many particles correspond
+                            to each model
+                            (indicated by how far curves extend to the right), and how well the particles from each
+                            model match the
+                            experimental measurements (indicated by how far curves extend downwards).
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
 
 
     </div>
