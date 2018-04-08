@@ -14,18 +14,21 @@
 
     <link rel="stylesheet" href="bootstrap/3.3.6/css/bootstrap.css">
     <link rel="stylesheet" href="css/starter-template.css">
+    <link rel="stylesheet" type="text/css" href="libs/d3.parcords.css">
+    <link rel="stylesheet" type="text/css" href="css/site.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
 
-    <link rel="stylesheet" type="text/css" href="css/site.css">
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="js/splom.js"></script>
     <script src="js/stackedbar.js"></script>
     <script src="js/distancePlot.js"></script>
     <script src="js/summaryTable.js"></script>
     <script src="js/rateTable.js"></script>
+    <script src="js/timeseries.js"></script>
+    <script src="libs/d3.parcords.js"></script>
 
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -67,7 +70,9 @@
     </div>
 </nav>
 
-<div class="container">
+<div class="container-fluid">
+
+    <div class="row"><div class="col-md-6" id="left-column">
 
     <div class="starter-template">
         <h1>Model Comparison</h1>
@@ -84,11 +89,11 @@
                 <div class="panel-body">
 
                     <div class="row">
-                        <div id="models" class="col-md-4 col-md-offset-4"></div>
+                        <div id="models" class="col-md-4"></div>
                     </div>
 
                     <div class="row">
-                        <div id="modelKinetics" class="col-md-4 col-md-offset-4"></div>
+                        <div id="modelKinetics" class="col-md-4"></div>
                     </div>
 
                 </div>
@@ -96,7 +101,7 @@
         </div>
 
         <div class="row">
-        <div id="summaryTable" class="col-md-4 col-md-offset-4"></div>
+        <div id="summaryTable" class="col-md-4"></div>
         </div>
 
         <div id="modelLikelihood"></div>
@@ -175,6 +180,168 @@
 
     </div>
 
+        </div>
+        <div class="col-md-6 col-md-offset-6" style="position: absolute" id="right-column">
+
+        <div class="starter-template">
+
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#model-concertina">Model</a>
+                </h4>
+            </div>
+            <div id="model-concertina" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <div class="row">
+                        <h2> Model </h2>
+                        <img id=networkPlaceholder src=""/>
+
+                        <p>The model can be downloaded in SBML format: <a href id="sbml_link"></a></p>
+                    </div>
+
+                    <div class="row">
+                        <h2> Prior Distribution </h2>
+
+                        <div id="paramTable" class="col-md-4 col-md-offset-4"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row"></div>
+        <h2> Posterior Distribution </h2>
+        <div id="epsilons">Epsilon values:</div>
+
+        <button onclick="toggleHistograms();" id="histogramButton" class="btn btn-default">Histograms on diagonal
+        </button>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#graph-concertina-1">Scatterplot</a>
+            </h4>
+        </div>
+        <div id="graph-concertina-1" class="panel-collapse collapse">
+
+
+            <div id="splom" style="float: none; margin: 0 auto;"></div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#help-concertina-1">Help</a>
+                    </h4>
+                </div>
+                <div id="help-concertina-1" class="panel-collapse collapse">
+                    <div class="panel-body">
+
+                        <dl class="dl-horizontal">
+                            <dt>Explanation</dt>
+                            <dd>This is a matrix of scatterplots of samples from the posterior distribution. Each point
+                                corresponds to a choice of parameters that, when simulated, gave a time-series that was
+                                "close"
+                                to the provided experimental data.
+                            </dd>
+
+                            <dt>Interactivity</dt>
+                            <dd>Clicking the button changes the generation for which samples are plotted, and updates
+                                the plot of trajectories below. Holding down the mouse allows selection of the points in
+                                a
+                                rectangular region
+                                of any scatterplot; the selected points are highlighted in all scatterplots, and other
+                                tajectories are hidden in the trajectory plot.
+                            </dd>
+
+                            <dt>Interpretation</dt>
+                            <dd>If uniform priors are applied, the scatterplot axes are scaled to the range of the
+                                prior. The proportion of the area covered by the samples thus gives an indication of the
+                                <i>factor
+                                    by which
+                                    uncertainty in the parameters has been reduced</i> by the experimental observations.
+                                Changing between
+                                different values of epsilon reveals how this affects the estimated posterior
+                                distribution. The
+                                pattern in
+                                which points are arranged reveals any correlations between the parameters, which are
+                                inidicative
+                                of problems
+                                with identifiability.
+                            </dd>
+                        </dl>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#graph-concertina-2">Parallel Coordinates</a>
+            </h4>
+        </div>
+        <div id="graph-concertina-2" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <div id="parcoords" class="parcoords" style="width:1200px;height:500px"></div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#graph-concertina-3">Simulation Trajectories</a>
+            </h4>
+        </div>
+        <div id="graph-concertina-3" class="panel-collapse collapse">
+            <div class="panel-body">
+
+                <h2>Simulation Trajectories</h2>
+                <div id="timeseries" style="float: none; margin: 0 auto;"></div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" href="#help-concertina-2">Help</a>
+                        </h4>
+                    </div>
+                    <div id="help-concertina-2" class="panel-collapse collapse">
+                        <div class="panel-body">
+
+                            <dl class="dl-horizontal">
+                                <dt>Explanation</dt>
+                                <dd>This graph shows time-courses for simulations using the parameters indicate in the
+                                    scatterplots above. Black crosses indicate the values of the experimental
+                                    measurements.
+                                </dd>
+
+                                <dt>Interactivity</dt>
+                                <dd>Highlighting points in the scatterplot filters this plot, by hiding trajectories
+                                    corresponding to points that are not selected. Hovering over a point reveals its
+                                    value.
+                                </dd>
+                            </dl>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+        </div>
+    </div>
+
 </div><!-- /.container -->
 
 
@@ -216,7 +383,7 @@
 
 
     function setup_page() {
-        width = $("body").width() - 200;
+        width = $("#left-column").width() - 50;
         getModelDetails(fill_placeholders);
     }
 
@@ -225,9 +392,52 @@
         summaryTable();
         plotErrors(width, false);
         fillRateTable();
+
+        selectModel(global_data.models[0].model_name)
     }
 
     window.onLoad = setup_page();
+
+    // This stuff came from index.html and deals with the right column
+    var drawHistograms = false;
+
+    function selectModel(newModelName, newEpsilon) {
+        modelName = newModelName;
+        model = global_data.models.filter(function (x) {
+            return x.model_name == modelName
+        })[0];
+
+        fill_detail_placeholders(newEpsilon);
+    }
+
+    function fill_detail_placeholders(epsilon) {
+
+        sbml_name = model.model_name;
+        document.getElementById('networkPlaceholder').src = path + modelName + ".png";
+        document.getElementById('sbml_link').href = path + model.sbml_name;
+        document.getElementById('sbml_link').innerHTML = model.sbml_name;
+
+        listEpsilons();
+        paramTable();
+
+        plotSPLOM(form_url_for_population(1), 0);
+        d3.select("#epsilons").selectAll("button").filter(function (d) {
+            return d == global_data.epsilon_schedule[0]
+        }).classed("active", true)
+
+        plotTimeSeries(1);
+
+        if (epsilon) {
+            var ind = global_data.epsilon_schedule.indexOf(epsilon);
+            var button = d3.select("#epsilons").selectAll('button').filter(function (x) {
+                return x == epsilon;
+            });
+
+            selectEpsilonFromSelection(button, ind);
+            plotTimeSeries(ind + 1);
+        }
+
+    }
 
 </script>
 
@@ -259,6 +469,24 @@
         stroke-width: 2px;
     }
 
+
+    .timeseries-line {
+        fill: none;
+    }
+
+    .timeseries-axis path {
+        fill: none;
+        stroke: black;
+        stroke-width: 2px;
+    }
+
+    .trajectory-not-selected {
+        visibility: hidden;
+    }
+
+    .bar rect {
+        shape-rendering: crispEdges;
+    }
 
 </style>
 

@@ -126,9 +126,8 @@ function summariseModelTable() {
             });
 
         bars.on("click", function (d) {
-                return window.location.href = window.location.href.split("?")[0].replace("comparison.html", "index.html") + "?experiment=" + getUrlVars()["experiment"] + "&model=" + d.model_name + "&epsilon=" + d.epsilon;
-            }
-        );
+            selectModel(d.model_name, d.epsilon);
+        });
 
         row.selectAll("text")
             .data(function (d) {

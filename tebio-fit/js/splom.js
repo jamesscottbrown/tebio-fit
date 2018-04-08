@@ -1,5 +1,7 @@
 function paramTable() {
     // base on http://www.d3noob.org/2013/02/add-html-table-to-your-d3js-graph.html
+    d3.select('#paramTable').node().innerHTML = "";
+
     var table = d3.select('#paramTable').append("table");
     table.classed('table', true).classed('table-bordered', true); // apply bootstrap table themeing
 
@@ -67,6 +69,8 @@ function form_url_for_population(i) {
 }
 
 function listEpsilons() {
+    d3.select('#epsilons').node().innerHTML = "";
+
     d3.select('#epsilons').append("p")
         .selectAll("p") // create empty selection
         .data(global_data.epsilon_schedule)
