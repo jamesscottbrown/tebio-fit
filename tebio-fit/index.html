@@ -231,7 +231,7 @@
 
 
                 <div class="row"></div>
-                <h2> Samples from Posterior Distribution </h2>
+                <h2> Samples from Posterior Distribution <i id="modelName"></i></h2>
                 <div id="epsilons">Epsilon values:</div>
 
             </div>
@@ -479,6 +479,7 @@
         })[0];
 
         fill_detail_placeholders(newEpsilon);
+        d3.select("#modelName").text("(" + modelName + ")");
     }
 
     function fill_detail_placeholders(epsilon) {
