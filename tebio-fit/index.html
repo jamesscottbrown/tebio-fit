@@ -90,11 +90,11 @@
                     <p class="lead">This page compares several candidate models.</p>
 
                     <div class="row">
-                        <div id="models" class="col-md-4"></div>
+                        <div id="models"></div>
                     </div>
 
                     <div class="row">
-                        <div id="modelKinetics" class="col-md-4"></div>
+                        <div id="modelKinetics"></div>
                     </div>
 
                 </div>
@@ -102,7 +102,7 @@
         </div>
 
         <div class="row">
-        <div id="summaryTable" class="col-md-4"></div>
+        <div id="summaryTable"></div>
         </div>
 
         <div id="modelLikelihood"></div>
@@ -200,7 +200,7 @@
                     </h4>
                 </div>
                 <div id="model-concertina" class="panel-collapse collapse">
-                    <div class="panel-body">
+                    <div class="panel-body" style="text-align: center">
                         <div class="row">
                             <h2> Model </h2>
                             <img id=networkPlaceholder src=""/>
@@ -470,6 +470,13 @@
 </script>
 
 <style>
+
+    table {
+           margin: auto;
+    }
+    img {
+        padding-bottom: 25px;
+    }
 
     .axis-title{
         font-size: 15pt;
