@@ -48,8 +48,8 @@ function plotTimeSeries(i) {
                 minVal[speciesIndex] = Infinity;
                 maxVal[speciesIndex] = -Infinity;
             }
-            if (speciesIndex > n){
-                n = speciesIndex;
+            if (speciesIndex >= n){
+                n = speciesIndex + 1;
             }
 
             cleanedData[i] = tmp;
@@ -66,7 +66,7 @@ function plotTimeSeries(i) {
 
         // Expand out model.fit array if necessary (because it was specified as 'None')
         if (model.fit.length < n){
-            for (var i = 0; i <= n; i++){
+            for (var i = 0; i < n; i++){
                 model.fit[i] = "Species" + i.toString();
             }
         }
