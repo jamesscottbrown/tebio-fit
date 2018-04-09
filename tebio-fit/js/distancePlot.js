@@ -6,7 +6,7 @@ function plotErrors(paddedWidth, redraw){
 
     // If drawing for the first time, create the 'max distance to plot' drop-down menu
     // Otherwise, adjust y-axis to selected value
-    var max_distance = global_data.epsilon_schedule[0];
+    var max_distance = +global_data.epsilon_schedule[0];
     if (redraw === false) {
         d3.select("#max_distance")
             .selectAll("option")
@@ -21,7 +21,7 @@ function plotErrors(paddedWidth, redraw){
             });
     } else {
         var e = document.getElementById("max_distance");
-        max_distance = parseFloat(e.options[e.selectedIndex].value);
+        max_distance = +e.options[e.selectedIndex].value;
     }
 
     // Build graphic
