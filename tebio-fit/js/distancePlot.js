@@ -102,6 +102,8 @@ function plotErrors(paddedWidth, redraw){
             .attr("stroke", "steelblue")
             .attr("stroke-width", "1px")
             .attr("stroke-dasharray", "5,5")
+            .classed("distance-refline", true)
+            .attr("id", "distance-refline-" + (generation-1))
 
     }
 
@@ -147,6 +149,8 @@ function plotErrors(paddedWidth, redraw){
 
     function plotLine(filteredData){
 
+        if (!filteredData || filteredData.length == 0){ return; }
+
         var group = svg.append("g")
             .attr("class", "refline")
             .attr("stroke", color(filteredData[0].modelNum+1) )
@@ -166,10 +170,17 @@ function plotErrors(paddedWidth, redraw){
                     svg.selectAll(".epsilon-points")
                         .classed("unselected", function(d2){ return d.epsilon !== d2.epsilon; })
                     ;
+
+                    svg.selectAll(".distance-refline").classed("unselected", true);
+                    var ind = global_data.epsilon_schedule.indexOf(d.epsilon);
+                    svg.selectAll("#distance-refline-" + ind).classed("unselected", false);
+
+
                 })
                 .on("mouseout",
                 function(){
                     svg.selectAll(".epsilon-points").classed("unselected", false);
+                    svg.selectAll(".distance-refline").classed("unselected", false);
                 });
 
 
