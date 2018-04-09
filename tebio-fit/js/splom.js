@@ -125,19 +125,8 @@ function plotSPLOM(dataURL, generation) {
     var size = 230,
         padding = 20;
 
-    var x = d3.scale.linear()
-
-    var y = d3.scale.linear()
-
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("bottom")
-        .ticks(6);
-
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left")
-        .ticks(6);
+    var x = d3.scale.linear();
+    var y = d3.scale.linear();
 
     var generations = Array.apply(null, global_data.epsilon_schedule).map(function (_, i) {return i;});
     var color = d3.scale.category10().domain(generations);
@@ -174,8 +163,6 @@ function plotSPLOM(dataURL, generation) {
 
         plotParcoords(parsedData, n, params);
 
-        xAxis.tickSize(size * n);
-        yAxis.tickSize(-size * n);
 
         var brush = d3.svg.brush()
             .x(x)
@@ -197,10 +184,17 @@ function plotSPLOM(dataURL, generation) {
             .enter().append("g")
             .attr("class", "x axis")
             .attr("transform", function (d, i) {
-                return "translate(" + (n - i - 1) * size + ",0)";
+                return "translate(" + i * size + ",0)";
             })
             .each(function (d) {
                 x.domain(getDomain(d));
+
+                var xAxis = d3.svg.axis()
+                    .scale(x)
+                    .orient("bottom")
+                    .ticks(6)
+                    .tickSize(size * n);
+
                 d3.select(this).call(xAxis);
             });
 
@@ -213,6 +207,13 @@ function plotSPLOM(dataURL, generation) {
             })
             .each(function (d) {
                 y.domain(getDomain(d));
+
+                var yAxis = d3.svg.axis()
+                    .scale(y)
+                    .orient("left")
+                    .ticks(6)
+                    .tickSize(-size * n);
+
                 d3.select(this).call(yAxis);
             });
 
