@@ -72,6 +72,7 @@ function listEpsilons() {
     d3.select('#epsilons').node().innerHTML = "";
 
     d3.select('#epsilons').append("p")
+        .append("p").text("Epsilon: ")
         .selectAll("p") // create empty selection
         .data(global_data.epsilon_schedule)
         .enter().append("button")
