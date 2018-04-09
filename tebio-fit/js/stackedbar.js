@@ -8,7 +8,7 @@ function summariseModelTable() {
         .enter()
         .append("li");
 
-        sections.append('a')
+    sections.append('a')
         .attr('href', function (d) {
             return window.location.href.split("?")[0].replace("comparison.html", "index.html") + "?experiment=" + getUrlVars()["experiment"] + "&model=" + d.model_name;
         })
@@ -22,13 +22,11 @@ function summariseModelTable() {
 
     var numModels = global_data.models.length;
     if (numModels === 1){
-        d3.select(".lead").text("This page is intended to compare models, but only one was provided:")
+        d3.select(".lead").text("This page has results for one model:")
     } else {
-        d3.select(".lead").text("This page compares " + numModels.toString() + " models:")
-
+        d3.select(".lead").text("This page has results for " + numModels.toString() + " models:")
     }
 
-    // plot graph
     var dataURL = path + "ModelDistribution.txt";
     d3.text(dataURL, function (error, rawData) {
         if (error) throw error;
@@ -75,7 +73,7 @@ function summariseModelTable() {
                 if (parsedData[i][j] === "") {
                     continue;
                 }
-                tmp = [];
+                tmp = {};
                 tmp["val"] = Number(parsedData[i][j]);
 
                 if (j === 0) {
@@ -147,8 +145,6 @@ function summariseModelTable() {
             .append("text").text("Epsilon")
             .classed("axis-title", true);
 
-
-
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + (full_height - (bar_thickness + padding)) + ")")
@@ -158,7 +154,5 @@ function summariseModelTable() {
             .attr("transform", "translate (" +  (width / 2 - 60 ) + "," +  (full_height + 10) + ")" )
             .append("text").text("Model Probability")
             .classed("axis-title", true);
-
-
     })
 }

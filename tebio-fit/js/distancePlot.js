@@ -1,8 +1,8 @@
 function plotErrors(paddedWidth, redraw){
 
-    var numGenerations = global_data.epsilon_schedule.length;
-    var numModels = global_data.models.length;
-    var numParticles = global_data.particles;
+    var numGenerations = +global_data.epsilon_schedule.length;
+    var numModels = +global_data.models.length;
+    var numParticles = +global_data.particles;
 
     // If drawing for the first time, create the 'max distance to plot' drop-down menu
     // Otherwise, adjust y-axis to selected value
@@ -85,9 +85,6 @@ function plotErrors(paddedWidth, redraw){
         .classed("axis-title", true);
 
 
-
-
-
     for (var generation = 1; generation <= numGenerations; generation++){
         if (global_data.epsilon_schedule[generation-1] > max_distance ){ continue; }
         processLine(generation);
@@ -124,18 +121,12 @@ function plotErrors(paddedWidth, redraw){
                     return d[3] === modelNum;
                 });
 
-
                 // reformat data
                 var filteredData = [];
                 for (var i=0; i < thisModelData.length; i++){
-                    var error = thisModelData[i][2];
-
-                    var tmp = [];
-                    tmp.y = parseFloat(error);
-                    tmp.modelNum = modelNum;
-                    tmp.epsilon = global_data.epsilon_schedule[generation-1];
-
-                    filteredData[i] = tmp;
+                    var distance = thisModelData[i][2];
+                    var epsilon = global_data.epsilon_schedule[generation-1];
+                    filteredData[i] = {y: +distance, modelNum: modelNum, epsilon: epsilon};
                 }
 
                 filteredData.sort(function(a,b){ return a.y - b.y; });
@@ -165,20 +156,19 @@ function plotErrors(paddedWidth, redraw){
             .classed("epsilon" + filteredData[0].epsilon, "true" )
             .classed("epsilon-points", "true" );
 
-            points.on("mouseover",
-                function(d){
-                    svg.selectAll(".epsilon-points")
-                        .classed("unselected", function(d2){ return d.epsilon !== d2.epsilon; })
-                    ;
+        points.on("mouseover",
+            function (d) {
+                svg.selectAll(".epsilon-points")
+                    .classed("unselected", function (d2) {
+                        return d.epsilon !== d2.epsilon;
+                    });
 
-                    svg.selectAll(".distance-refline").classed("unselected", true);
-                    var ind = global_data.epsilon_schedule.indexOf(d.epsilon);
-                    svg.selectAll("#distance-refline-" + ind).classed("unselected", false);
-
-
-                })
-                .on("mouseout",
-                function(){
+                svg.selectAll(".distance-refline").classed("unselected", true);
+                var ind = global_data.epsilon_schedule.indexOf(d.epsilon);
+                svg.selectAll("#distance-refline-" + ind).classed("unselected", false);
+            })
+            .on("mouseout",
+                function () {
                     svg.selectAll(".epsilon-points").classed("unselected", false);
                     svg.selectAll(".distance-refline").classed("unselected", false);
                 });
@@ -188,7 +178,6 @@ function plotErrors(paddedWidth, redraw){
             .text(function (d) {
                 return "epsilon =" + d.epsilon + ", error = " + d.y;
             });
-
 
 
         var line = d3.svg.line()
@@ -206,9 +195,5 @@ function plotErrors(paddedWidth, redraw){
             .attr("stroke-width", "1px")
             .attr("fill", "none")
             .classed("epsilon-line", "true" );
-
     }
-
-
-
 }

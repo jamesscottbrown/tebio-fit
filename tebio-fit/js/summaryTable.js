@@ -5,15 +5,14 @@ function summaryTable() {
     d3.text(dataURL, function (error, rawData) {
         if (error) throw error;
 
-        var dsv = d3.dsv(" ", "text/plain");
 
         rawData = rawData.replace(/\[/g, '').replace(/]/g, '').replace(/  /g, ' ');
 
-        var parsedData = dsv.parseRows(rawData);
+        var parsedData = d3.dsv(" ", "text/plain")
+            .parseRows(rawData);
 
         var table = d3.select('#summaryTable').append("table");
         table.classed('table', true).classed('table-bordered', true); // apply bootstrap table themeing
-
 
         var tHead = table.append("thead");
         var tBody = table.append("tbody");
