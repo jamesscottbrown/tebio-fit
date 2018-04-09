@@ -52,7 +52,9 @@ function plotErrors(paddedWidth, redraw){
         .ticks(6);
 
     // same color scale as in bar chart. TODO: share the scale object
-    var color = d3.scale.category10();
+    var color = d3.scale.category10()
+            .domain([1, numModels]);
+
 
     // create SVG
     d3.select("#errors").select('svg').remove();

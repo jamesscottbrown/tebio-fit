@@ -50,7 +50,7 @@ function summariseModelTable() {
             .domain([0, parsedData.length]);
 
         var color = d3.scale.category10()
-            .domain([0, parsedData[0].length]);
+            .domain([1, numModels]);
 
         var svg = d3.select('#modelLikelihood').append('svg')
             .attr("width", width)
@@ -115,7 +115,7 @@ function summariseModelTable() {
             })
             .attr('height', 20)
             .style('fill', function (d, i) {
-                return color(i);
+                return color(i+1);
             });
 
         bars.append("svg:title")
