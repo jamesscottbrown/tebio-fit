@@ -103,19 +103,11 @@ function toggleHistograms(){
 }
 
 function plotParcoords(parsedData, n, params){
-    var subData = parsedData.map(function (d) {
-        var values = {};
-        for (var i = 0; i < n; i++) {
-            var param = params[i];
-            values[param.name] = (d[param.column]);
-        }
-        return values;
-    });
-
 
     d3.select("#parcoords").node().innerHTML = "";
     var pc = d3.parcoords()("#parcoords")
-        .data(subData)
+        .data(parsedData)
+        .hideAxis(["particle_number", "generation"])
         .alpha(0.2)
         .width(width).height(500) // We need to set this, becuase parent DIV collapses to 0x0 when folded, causing drawing to fail
         .margin({top: 24, left: 0, bottom: 12, right: 0})
@@ -153,18 +145,28 @@ function plotSPLOM(dataURL, generation) {
     d3.text(dataURL, function (error, rawData) {
         if (error) throw error;
 
-        var dsv = d3.dsv(" ", "text/plain");
-        parsedData = dsv.parseRows(rawData);
+        var params = model.params.filter(function (x) {
+                return x.type !== "constant";
+            }),
+            n = params.length;
+
+        parsedData = d3.dsv(" ", "text/plain")
+            .parseRows(rawData)
+            .map(function (d) {
+                var values = {};
+                for (var i = 0; i < n; i++) {
+                    var param = params[i];
+                    values[param.name] = (d[param.column]);
+                }
+                return values;
+            });
+
 
         for (var i = 0; i < parsedData.length; i++) {
             parsedData[i]["particle_number"] = i;
             parsedData[i]["generation"] = generation;
         }
 
-        var params = model.params.filter(function (x) {
-                return x.type !== "constant";
-            }),
-            n = params.length;
 
         size = (width - (n-1)*padding) / n;
         x.range([padding / 2, size - padding / 2]);
@@ -260,7 +262,7 @@ function plotSPLOM(dataURL, generation) {
 
             var values = [];
             for (var i=0; i < parsedData.length; i++){
-                values[i] = parsedData[i][p.x.column];
+                values[i] = parsedData[i][p.x.name];
             }
 
             var data = d3.layout.histogram()
@@ -304,10 +306,10 @@ function plotSPLOM(dataURL, generation) {
                 .data(parsedData)
                 .enter().append("circle")
                 .attr("cx", function (d) {
-                    return x(d[p.x.column]);
+                    return x(d[p.x.name]);
                 })
                 .attr("cy", function (d) {
-                    return y(d[p.y.column]);
+                    return y(d[p.y.name]);
                 })
                 .attr("r", 4)
                 .style("fill", function (d) {
