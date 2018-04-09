@@ -75,9 +75,7 @@
     <div class="row"><div class="col-md-6" id="left-column">
 
     <div class="starter-template">
-        <h1>Model Comparison</h1>
-
-        <p class="lead">This page compares several candidate models.</p>
+        <h1>Overview</h1>
 
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -85,8 +83,11 @@
                     <a data-toggle="collapse" href="#concertina-models-details">Model details</a>
                 </h4>
             </div>
+
             <div id="concertina-models-details" class="panel-collapse collapse">
                 <div class="panel-body">
+
+                    <p class="lead">This page compares several candidate models.</p>
 
                     <div class="row">
                         <div id="models" class="col-md-4"></div>
@@ -186,7 +187,13 @@
         <div class="starter-template">
 
 
-        <div class="panel panel-default">
+        <div class="row"></div>
+        <h2> Samples from Posterior Distribution </h2>
+        <div id="epsilons">Epsilon values:</div>
+
+    </div>
+
+                    <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" href="#model-concertina">Model</a>
@@ -211,13 +218,6 @@
             </div>
         </div>
 
-        <div class="row"></div>
-        <h2> Posterior Distribution </h2>
-        <div id="epsilons">Epsilon values:</div>
-
-        <button onclick="toggleHistograms();" id="histogramButton" class="btn btn-default">Histograms on diagonal
-        </button>
-    </div>
 
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -227,6 +227,8 @@
         </div>
         <div id="graph-concertina-1" class="panel-collapse collapse">
 
+                    <button onclick="toggleHistograms();" id="histogramButton" class="btn btn-default">Histograms on diagonal
+        </button>
 
             <div id="splom" style="float: none; margin: 0 auto;"></div>
 
