@@ -21,8 +21,19 @@ function plotTimeSeries(i) {
     d3.text(dataURL, function (error, rawData) {
         if (error) throw error;
 
-        var dsv = d3.dsv(" ", "text/plain");
-        parsedData = dsv.parseRows(rawData);
+        // Filter out results from different model
+        var modelIndex;
+        for (var i = 0; i < global_data.models.length; i++) {
+            if (global_data.models[i].model_name === model.model_name) {
+                modelIndex = i;
+            }
+        }
+
+        var parsedData = d3.dsv(" ", "text/plain")
+            .parseRows(rawData)
+            .filter(function (d) {
+                return +d[2] === modelIndex;
+            });
 
         // Rows encode values: particle number, replicate number, model id, species id, then series
 
@@ -32,7 +43,7 @@ function plotTimeSeries(i) {
         for (var i = 0; i < parsedData.length; i++) {
             raw = parsedData[i];
 
-            tmp = [];
+            tmp = {};
             tmp["particle_number"] = +raw[0];
             tmp["replicate"] = +raw[1];
             tmp["modelIndex"] = +raw[2];
@@ -69,6 +80,10 @@ function plotTimeSeries(i) {
             for (var i = 0; i < n; i++){
                 model.fit[i] = "Species" + i.toString();
             }
+
+            for (var i = 0; i < parsedData.length; i++) {
+                cleanedData[i]["speciesName"] = model.fit[cleanedData[i]["speciesIndex"]];
+            }
         }
 
         // Expand range to include time-series
@@ -78,17 +93,6 @@ function plotTimeSeries(i) {
             if (tmp[1] > maxVal[i]){ maxVal[i] = tmp[1]; }
         }
 
-        // Filter out results from different model
-        var modelIndex;
-        for (var i = 0; i < global_data.models.length; i++) {
-            if (global_data.models[i].model_name === model.model_name) {
-                modelIndex = i;
-            }
-        }
-
-        var cleanedData = cleanedData.filter(function (d) {
-            return d.modelIndex === modelIndex;
-        });
 
         // We need to re-number
         // Some particle numbers are missing, as the corresponding particles were rejected.
