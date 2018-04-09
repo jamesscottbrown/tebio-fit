@@ -102,10 +102,11 @@ function toggleHistograms(){
 
 }
 
+var pc;
 function plotParcoords(parsedData, n, params){
 
     d3.select("#parcoords").node().innerHTML = "";
-    var pc = d3.parcoords()("#parcoords")
+    pc = d3.parcoords()("#parcoords")
         .data(parsedData)
         .hideAxis(["particle_number", "generation"])
         .alpha(0.2)
@@ -113,7 +114,12 @@ function plotParcoords(parsedData, n, params){
         .margin({top: 24, left: 0, bottom: 12, right: 0})
         .render()
         .reorderable()
-        .brushMode("1D-axes");  // enable brushing
+        .brushMode("1D-axes");
+
+        pc.on("brush", function(d){
+            var selected_particle_numbers = d.map(function (d2){ return d2.particle_number; });
+            highlightPoints(selected_particle_numbers);
+;        })
 }
 
 function getDomain(param){
@@ -334,15 +340,24 @@ function plotSPLOM(dataURL, generation) {
         function brushmove(p) {
             var e = brush.extent();
             svg.selectAll("circle").classed("not-selected", function (d) {
-                return e[0][0] > d[p.x.column] || d[p.x.column] > e[1][0]
-                    || e[0][1] > d[p.y.column] || d[p.y.column] > e[1][1];
+                return e[0][0] > d[p.x.name] || d[p.x.name] > e[1][0]
+                    || e[0][1] > d[p.y.name] || d[p.y.name] > e[1][1];
             });
-            highlightTimeSeries();
+
+
+            var selected_particle_numbers = svg.selectAll("circle").filter(function (d) {
+                return e[0][0] < d[p.x.name] && d[p.x.name] < e[1][0]
+                    && e[0][1] < d[p.y.name] && d[p.y.name] < e[1][1];
+            })
+                .data()
+                .map(function(d){ return d.particle_number});
+            highlightPoints(selected_particle_numbers);
+
         }
 
         // If the brush is empty, select all circles.
         function brushend() {
-            if (brush.empty()) svg.selectAll(".not-selected").classed("not-selected", false);
+            if (brush.empty()) deselectAll();
             highlightTimeSeries();
         }
 
@@ -355,4 +370,30 @@ function plotSPLOM(dataURL, generation) {
         return c;
     }
 
+}
+
+function highlightPoints(particle_numbers){
+    // SPLOM
+    d3.select("#splom").selectAll("circle").classed("not-selected", function(d){
+        return particle_numbers.indexOf(d.particle_number) === -1;
+    });
+
+    // parallel coordinates
+    var data = pc.data().filter(function(d){ return particle_numbers.indexOf(d.particle_number) !== -1 });
+    pc.highlight(data); // d is a list of data objects, not just IDs :(
+
+    // trajectories
+    d3.selectAll(".trajectory").classed("trajectory-not-selected", function (d) {
+        return particle_numbers.indexOf(d.particle_number) === -1;
+    });
+}
+
+function deselectAll(){
+     d3.select("#splom").selectAll("circle").classed("not-selected", false);
+
+    // parallel coordinates
+    pc.unhighlight();
+
+    // trajectories
+    d3.selectAll(".trajectory").classed("trajectory-not-selected", false);
 }
