@@ -438,11 +438,15 @@
     function getModelDetails(callback) {
 
         experiment = getUrlVars()["experiment"];
-        path = "data/" + experiment + "/";
+        var data_path = getUrlVars()["data_path"];
 
-        if (!experiment){
+        if (experiment){
+            path = "data/" + experiment + "/";
+        } else if (data_path){
+            path = data_path
+        } else {
             var url = window.location.href;
-            window.location = url.replace('comparison.html', 'about.html');
+            window.location = url.replace('index.html', 'about.html');
         }
 
         d3.json(path + "setup.json", function (d) {
@@ -450,6 +454,27 @@
             //model = global_data.models.filter( function(x){ return x.model_name == modelName }  )[0];
             callback();
         });
+
+        var nav_path = getUrlVars()["nav"];
+        if (nav_path){
+            $.ajax({
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                url: nav_path,
+                dataType: 'html',
+                async: true,
+                data: "{}",
+                success: function (data) {
+                    d3.select("nav").node().innerHTML = data;
+                },
+                error: function (result) {
+
+        }
+
+        })
+    }
+
+
     }
 
 
