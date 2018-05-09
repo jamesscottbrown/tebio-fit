@@ -1,6 +1,6 @@
 function summaryTable() {
 
-    var dataURL = "data/" + experiment + "/rates.txt";
+    var dataURL = path + "rates.txt";
 
     d3.text(dataURL, function (error, rawData) {
         if (error) throw error;
