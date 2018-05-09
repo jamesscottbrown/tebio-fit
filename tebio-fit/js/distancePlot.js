@@ -113,9 +113,9 @@ function plotErrors(paddedWidth, redraw){
         d3.text(dataURL, function (error, rawData) {
             if (error) throw error;
 
-            var dsv = d3.dsv(" ", "text/plain");
-            var parsedData = dsv.parseRows(rawData);
-            parsedData = parsedData.map(function(d){ return [+d[0], +d[1], d[2].replace('[', '').replace(']', ''), +d[3]] });
+            rawData = rawData.replace(/\[ /g, '').replace(/\[/g, '').replace(/\]/g, '');
+            var parsedData = d3.dsv(" ", "text/plain").parseRows(rawData);
+            parsedData = parsedData.map(function(d){ return [+d[0], +d[1], +d[2], +d[3]] });
 
             // filter to get particles for this model only
             for (var modelNum = 0; modelNum < numModels; modelNum++) {
