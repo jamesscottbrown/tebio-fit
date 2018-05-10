@@ -423,7 +423,7 @@
     var model;
     var modelName;
     var path;
-    var global_data;
+    var global_data, summary_model_data;
 
     // Function from http://stackoverflow.com/a/979996
     function getUrlVars() {
@@ -452,7 +452,28 @@
         d3.json(path + "setup.json", function (d) {
             global_data = d;
             //model = global_data.models.filter( function(x){ return x.model_name == modelName }  )[0];
-            callback();
+
+
+                var dataURL = path + "rates.txt";
+
+            d3.text(dataURL, function (error, rawData) {
+                if (error) throw error;
+
+
+                rawData = rawData.replace(/\[/g, '').replace(/]/g, '').replace(/  /g, ' ');
+
+                summary_model_data = d3.dsv(" ", "text/plain")
+                    .parseRows(rawData);
+
+                // populate epsilon_schedule form rates file if automatic schedule used
+                if (global_data.epsilon_schedule.length === 0){
+                    global_data.epsilon_schedule = summary_model_data.map(function(row){ return row[1]; });
+                }
+
+                callback();
+
+            });
+
         });
 
         var nav_path = getUrlVars()["nav"];
@@ -487,7 +508,6 @@
         summariseModelTable();
         summaryTable();
         plotErrors(width, false);
-        fillRateTable();
 
         selectModel(global_data.models[0].model_name)
     }
