@@ -112,8 +112,14 @@ function plotParcoords(parsedData, n, params){
         .hideAxis(["particle_number", "generation"])
         .alpha(0.2)
         .width(width).height(500) // We need to set this, becuase parent DIV collapses to 0x0 when folded, causing drawing to fail
-        .margin({top: 24, left: 0, bottom: 12, right: 0})
-        .render()
+        .margin({top: 5, left: 0, bottom: 0, right: 0})
+        .autoscale();
+
+        for (var i=0; i<params.length; i++){
+            pc.state.dimensions[ params[i].name ].yscale.domain([params[i].min, params[i].max])
+        }
+
+        pc.render()
         .reorderable()
         .brushMode("1D-axes");
 
