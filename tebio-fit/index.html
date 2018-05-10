@@ -503,6 +503,12 @@
             return x.model_name == modelName
         })[0];
 
+        model.params = model.params.map(function(d){
+            if (d.hasOwnProperty("realName")){ d.name = d.realName; }
+            return d;
+        });
+
+
         fill_detail_placeholders(newEpsilon);
         d3.select("#modelName").text("(" + modelName + ")");
     }
