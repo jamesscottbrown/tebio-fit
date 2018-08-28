@@ -18,6 +18,9 @@ function plotTimeSeries(i) {
     var dataURL = path + "traj_Population" + i + ".txt";
 
     var subsampleRate = parseInt(document.getElementById("subsampling").value);
+    if (isNaN(subsampleRate)){
+        subsampleRate = 1;
+    }
 
     filtered_times = global_data.times.filter(function(value, index) {
         return (index % subsampleRate) === 0;
