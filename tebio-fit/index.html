@@ -489,6 +489,8 @@
                     global_data.epsilon_schedule = summary_model_data.map(function(row){ return row[1]; });
                 }
 
+                global_data.epsilon_schedule = summary_model_data.map( function(d){ return d[1] });
+
                 callback();
 
             });
