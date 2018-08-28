@@ -440,15 +440,22 @@
         var data_path = getUrlVars()["data_path"];
 
         if (experiment){
-            path = "data/" + experiment + "/";
+            basePath = "data/" + experiment + "/";
         } else if (data_path){
-            path = data_path
+            basePath = data_path
         } else {
             var url = window.location.href;
             window.location = url.replace('index.html', 'about.html');
         }
 
-        d3.json(path + "setup.json", function (d) {
+        if (!basePath.endsWith("/")){
+            basePath = basePath + "/";
+        }
+
+        var setupURL = basePath + "setup.json";
+        path = basePath + "_results_/";
+
+        d3.json(setupURL, function (d) {
             global_data = d;
             //model = global_data.models.filter( function(x){ return x.model_name == modelName }  )[0];
 
@@ -535,8 +542,8 @@
     function fill_detail_placeholders(epsilon) {
 
         sbml_name = model.model_name;
-        document.getElementById('networkPlaceholder').src = path + modelName + ".png";
-        document.getElementById('sbml_link').href = path + model.sbml_name;
+        document.getElementById('networkPlaceholder').src = basePath + modelName + ".png";
+        document.getElementById('sbml_link').href = basePath + model.sbml_name;
         document.getElementById('sbml_link').innerHTML = model.sbml_name;
 
         listEpsilons();

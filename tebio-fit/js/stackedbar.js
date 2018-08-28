@@ -17,7 +17,7 @@ function summariseModelTable() {
         });
 
     d3.select('#models').append("img")
-        .attr('src', path + "compare.png");
+        .attr('src', basePath + "compare.png");
 
 
     var numModels = global_data.models.length;
