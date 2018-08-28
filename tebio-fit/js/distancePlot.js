@@ -52,7 +52,7 @@ function plotErrors(paddedWidth, redraw){
         .ticks(6);
 
     // same color scale as in bar chart. TODO: share the scale object
-    var color = d3.scale.category10()
+    var modelColor = d3.scale.category10()
             .domain([1, numModels]);
 
 
@@ -103,6 +103,7 @@ function plotErrors(paddedWidth, redraw){
             .attr("stroke-dasharray", "5,5")
             .classed("distance-refline", true)
             .attr("id", "distance-refline-" + (generation-1))
+            .style("stroke", generationColor(generation-1))
 
     }
 
@@ -134,20 +135,20 @@ function plotErrors(paddedWidth, redraw){
                 filteredData.sort(function(a,b){ return a.y - b.y; });
 
                 // plot
-                plotLine(filteredData);
+                plotLine(filteredData, generation);
             }
         });
 
     }
 
-    function plotLine(filteredData){
+    function plotLine(filteredData, generation){
 
         if (!filteredData || filteredData.length == 0){ return; }
 
         var group = svg.append("g")
             .attr("class", "refline")
-            .attr("stroke", color(filteredData[0].modelNum+1) )
-            .attr("fill", color(filteredData[0].modelNum+1) );
+            .attr("stroke", modelColor(filteredData[0].modelNum+1))
+            .attr("fill", modelColor(filteredData[0].modelNum+1));
 
         var points = group.selectAll("path")
             .data(filteredData)
@@ -193,7 +194,7 @@ function plotErrors(paddedWidth, redraw){
 
         svg.append("svg:path").attr("d", line(filteredData))
             .attr("fill", "none")
-            .attr("stroke", color(filteredData[0].modelNum+1))
+            .attr("stroke", generationColor(generation-1))
             .attr("stroke-width", "1px")
             .attr("fill", "none")
             .classed("epsilon-line", "true" );

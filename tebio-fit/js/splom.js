@@ -149,9 +149,6 @@ function plotSPLOM(dataURL, generation) {
     var x = d3.scale.linear();
     var y = d3.scale.linear();
 
-    var generations = Array.apply(null, global_data.epsilon_schedule).map(function (_, i) {return i;});
-    var color = d3.scale.category10().domain(generations);
-
     d3.text(dataURL, function (error, rawData) {
         if (error) throw error;
 
@@ -304,7 +301,7 @@ function plotSPLOM(dataURL, generation) {
                 .attr("width", x(data[0].dx) - 1)
                 .attr("height", function(d) { return (size - padding/2) - y(d.y); })
                 .style("fill", function () {
-                    return color(parsedData[0].generation);
+                    return generationColor(parsedData[0].generation);
                 });
 
         }
@@ -335,7 +332,7 @@ function plotSPLOM(dataURL, generation) {
                 })
                 .attr("r", 4)
                 .style("fill", function (d) {
-                    return color(d.generation);
+                    return generationColor(d.generation);
                 });
         }
 

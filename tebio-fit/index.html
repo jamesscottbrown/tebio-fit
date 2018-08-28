@@ -431,6 +431,7 @@
     var modelName;
     var path;
     var global_data, summary_model_data;
+    var generationColor;
 
     // Function from http://stackoverflow.com/a/979996
     function getUrlVars() {
@@ -465,6 +466,10 @@
 
         d3.json(setupURL, function (d) {
             global_data = d;
+
+            var generations = Array.apply(null, global_data.epsilon_schedule).map(function (_, i) {return i;});
+            generationColor = d3.scale.category10().domain(generations);
+
             //model = global_data.models.filter( function(x){ return x.model_name == modelName }  )[0];
 
 
