@@ -107,6 +107,59 @@ function plotErrors(paddedWidth, redraw){
 
     }
 
+
+        var brush = d3.svg.brush()
+            .x(x)
+            .y(y)
+            .on("brushstart", brushstart)
+            .on("brush", brushmove)
+            .on("brushend", brushend);
+
+        var brushCell;
+
+        // Clear the previously-active brush, if any.
+        function brushstart(p) {
+            brushCell = this;
+        }
+
+        // Highlight the selected circles.
+        function brushmove(p) {
+            var e = brush.extent();
+
+            svg.selectAll(".epsilon-points").classed("unselected", function (d) {
+                return e[0][0] > d.particleRank
+                    || d.particleRank > e[1][0]
+                    || e[0][1] > d.y
+                    || d.y > e[1][1]
+                    || (d.epsilon !== global_data.epsilon_schedule[selectedEpsilon]);
+            });
+
+
+            var selected_particle_numbers = svg.selectAll(".epsilon-points").filter(function (d) {
+                return e[0][0] < d.particleRank
+                    && d.particleRank < e[1][0]
+                    && e[0][1] < d.y
+                    && d.y < e[1][1]
+                    && (d.epsilon == global_data.epsilon_schedule[selectedEpsilon]);
+            })
+                .data()
+                .map(function(d){ return d.particleNumber});
+            highlightPoints(selected_particle_numbers);
+
+        }
+
+        // If the brush is empty, select all circles.
+        function brushend() {
+            if (brush.empty()) deselectAll();
+            highlightTimeSeries();
+        }
+
+        svg.call(brush);
+
+
+
+
+
     function processLine(generation){
 
         var dataURL = path + "distance_Population" + generation.toString() + ".txt";
@@ -133,6 +186,10 @@ function plotErrors(paddedWidth, redraw){
                 }
 
                 filteredData.sort(function(a,b){ return a.y - b.y; });
+                filteredData = filteredData.map(function(d, i){
+                    d.particleRank = i;
+                    return d;
+                });
 
                 // plot
                 plotLine(filteredData, generation);
@@ -155,7 +212,7 @@ function plotErrors(paddedWidth, redraw){
             .enter()
             .append("path")
             .attr("d", d3.svg.symbol().type('circle') )
-            .attr("transform", function(d, i){ return "translate (" + x(i) + ", " + y(d.y) + ")";}  )
+            .attr("transform", function(d, i){ return "translate (" + x(d.particleRank) + ", " + y(d.y) + ")";}  )
             .classed("epsilon" + filteredData[0].epsilon, "true" )
             .classed("epsilon-points", "true" );
 
@@ -186,7 +243,7 @@ function plotErrors(paddedWidth, redraw){
         var line = d3.svg.line()
             // assign the X function to plot our line as we wish
             .x(function(d,i) {
-                return x(i);
+                return x(d.particleRank);
             })
             .y(function(d) {
                 return y(d.y);
