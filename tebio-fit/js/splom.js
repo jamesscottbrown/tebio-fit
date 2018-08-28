@@ -398,6 +398,14 @@ function highlightPoints(particle_numbers){
     d3.selectAll(".trajectory").classed("trajectory-not-selected", function (d) {
         return particle_numbers.indexOf(d.particle_number) === -1;
     });
+
+    // particle-distances
+    d3.selectAll(".epsilon-points").classed("unselected", function(d){
+        var different_epsilon = (d.epsilon !== global_data.epsilon_schedule[selectedEpsilon]);
+        var different_particle = (particle_numbers.indexOf(d.particleNumber) === -1);
+
+        return different_epsilon || different_particle;
+    })
 }
 
 function deselectAll(){
@@ -408,4 +416,7 @@ function deselectAll(){
 
     // trajectories
     d3.selectAll(".trajectory").classed("trajectory-not-selected", false);
+
+    // particle-distances
+    d3.selectAll(".epsilon-points").classed("unselected", false);
 }

@@ -129,7 +129,7 @@ function plotErrors(paddedWidth, redraw){
                 for (var i=0; i < thisModelData.length; i++){
                     var distance = thisModelData[i][2];
                     var epsilon = global_data.epsilon_schedule[generation-1];
-                    filteredData[i] = {y: +distance, modelNum: modelNum, epsilon: epsilon};
+                    filteredData[i] = {y: +distance, modelNum: modelNum, epsilon: epsilon, particleNumber: i};
                 }
 
                 filteredData.sort(function(a,b){ return a.y - b.y; });
