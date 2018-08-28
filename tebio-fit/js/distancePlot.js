@@ -129,8 +129,8 @@ function plotErrors(paddedWidth, redraw){
             svg.selectAll(".epsilon-points").classed("unselected", function (d) {
                 return e[0][0] > d.particleRank
                     || d.particleRank > e[1][0]
-                    || e[0][1] > d.y
-                    || d.y > e[1][1]
+                    || e[0][1] > d.error
+                    || d.error > e[1][1]
                     || (d.epsilon !== global_data.epsilon_schedule[selectedEpsilon]);
             });
 
@@ -138,8 +138,8 @@ function plotErrors(paddedWidth, redraw){
             var selected_particle_numbers = svg.selectAll(".epsilon-points").filter(function (d) {
                 return e[0][0] < d.particleRank
                     && d.particleRank < e[1][0]
-                    && e[0][1] < d.y
-                    && d.y < e[1][1]
+                    && e[0][1] < d.error
+                    && d.error < e[1][1]
                     && (d.epsilon == global_data.epsilon_schedule[selectedEpsilon]);
             })
                 .data()
@@ -182,10 +182,10 @@ function plotErrors(paddedWidth, redraw){
                 for (var i=0; i < thisModelData.length; i++){
                     var distance = thisModelData[i][2];
                     var epsilon = global_data.epsilon_schedule[generation-1];
-                    filteredData[i] = {y: +distance, modelNum: modelNum, epsilon: epsilon, particleNumber: i};
+                    filteredData[i] = {error: +distance, modelNum: modelNum, epsilon: epsilon, particleNumber: i};
                 }
 
-                filteredData.sort(function(a,b){ return a.y - b.y; });
+                filteredData.sort(function(a,b){ return a.error - b.error; });
                 filteredData = filteredData.map(function(d, i){
                     d.particleRank = i;
                     return d;
@@ -212,7 +212,7 @@ function plotErrors(paddedWidth, redraw){
             .enter()
             .append("path")
             .attr("d", d3.svg.symbol().type('circle') )
-            .attr("transform", function(d, i){ return "translate (" + x(d.particleRank) + ", " + y(d.y) + ")";}  )
+            .attr("transform", function(d, i){ return "translate (" + x(d.particleRank) + ", " + y(d.error) + ")";}  )
             .classed("epsilon" + filteredData[0].epsilon, "true" )
             .classed("epsilon-points", "true" );
 
@@ -236,7 +236,7 @@ function plotErrors(paddedWidth, redraw){
 
         group.selectAll("path").append("title")
             .text(function (d) {
-                return "epsilon =" + d.epsilon + ", error = " + d.y;
+                return "epsilon =" + d.epsilon + ", error = " + d.error;
             });
 
 
@@ -246,7 +246,7 @@ function plotErrors(paddedWidth, redraw){
                 return x(d.particleRank);
             })
             .y(function(d) {
-                return y(d.y);
+                return y(d.error);
             });
 
         svg.append("svg:path").attr("d", line(filteredData))
