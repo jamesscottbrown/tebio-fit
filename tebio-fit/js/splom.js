@@ -47,10 +47,18 @@ function paramTable() {
 
 }
 
+var selectedEpsilon=0;
 function selectEpsilon(d, i) {
     d3.select('#epsilons').selectAll("button").classed("active", false);
     d3.select(this).classed("active", true);
 
+    selectedEpsilon = i;
+    plotSPLOM(form_url_for_population(i + 1), i);
+    plotTimeSeries(i + 1);
+}
+
+function replotSelectedEpsilon(){
+    var i = selectedEpsilon;
     plotSPLOM(form_url_for_population(i + 1), i);
     plotTimeSeries(i + 1);
 }

@@ -17,6 +17,13 @@ function plotTimeSeries(i) {
 
     var dataURL = path + "traj_Population" + i + ".txt";
 
+    var subsampleRate = parseInt(document.getElementById("subsampling").value);
+
+    filtered_times = global_data.times.filter(function(value, index) {
+        return (index % subsampleRate) === 0;
+    });
+
+
 
     d3.text(dataURL, function (error, rawData) {
         if (error) throw error;
@@ -52,6 +59,10 @@ function plotTimeSeries(i) {
 
             tmp["data"] = raw.slice(4);
             tmp["data"].length = global_data.times.length; // will truncate to remove spurious "" at end of line
+
+            tmp["data"] = tmp["data"].filter(function(value, index) {
+                return (index % subsampleRate) === 0;
+            });
 
             // If necessary, update count of species, and extend array of max/min values
             var speciesIndex = tmp["speciesIndex"];
@@ -109,7 +120,7 @@ function plotTimeSeries(i) {
 
         }
 
-        var endTime = global_data.times[ global_data.times.length - 1 ];
+        var endTime = filtered_times[ filtered_times.length - 1 ];
 
 
         // Build graphic
@@ -181,7 +192,7 @@ function plotTimeSeries(i) {
 
             for (var t=0; t < measurements.length; t++){
                 var tmp=[];
-                tmp["x"] = global_data.times[t];
+                tmp["x"] = filtered_times[t];
                 tmp["y"] = measurements[t];
 
                 if ( tmp["y"] !== "NA"){
@@ -252,7 +263,7 @@ function plotTimeSeries(i) {
                 .enter()
                 .append('circle')
                 .attr("cx", function (d, i) {
-                    return x(global_data.times[i]);
+                    return x(filtered_times[i]);
                 })
                 .attr("cy", function (d) {
                     return y(d.y);
@@ -264,14 +275,14 @@ function plotTimeSeries(i) {
 
             points.append("svg:title")
                 .text(function (d, i) {
-                    return "(" + global_data.times[i] + ", " + d.y + ")";
+                    return "(" + filtered_times[i] + ", " + d.y + ")";
                 }); // TODO: add 1 to i?
 
 
             // add line
             var line = d3.svg.line()
                 .x(function (d) {
-                    return x(global_data.times[d.x]);
+                    return x(filtered_times[d.x]);
                 })
                 .y(function (d) {
                     return y(d.y);

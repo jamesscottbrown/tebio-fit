@@ -377,6 +377,14 @@
                 <h2>Simulation Trajectories</h2>
                 <div id="timeseries" style="float: none; margin: 0 auto;"></div>
 
+                    <form>
+                    <div class="form-group">
+                        <label for="subsampling">Timepoints between each plotted point:</label>
+                        <input id="subsampling" name="subsampling" onchange="replotSelectedEpsilon()" value="4"></input>
+                    </div>
+                    </form>
+
+
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
