@@ -113,9 +113,6 @@ function plotDensityEstimate(paddedWidth, redraw) {
             padding = 100,
             innerWidth = paddedWidth - padding;
 
-        var x = d3.scale.linear()
-            .range([padding / 2, innerWidth - padding / 2])
-            .domain([0, maxVal]);
 
         var yScales = [], yAxes = [];
         for (var i = 0; i < model.params.length; i++) {
@@ -140,10 +137,21 @@ function plotDensityEstimate(paddedWidth, redraw) {
 
         }
 
-        var xAxis = d3.svg.axis()
-            .scale(x)
-            .orient("bottom")
-            .ticks(6);
+        var xScales = [], xAxes = [];
+        for (var i = 0; i < model.params.length; i++) {
+
+
+            tmp = d3.scale.linear()
+            .range([padding / 2, innerWidth - padding / 2])
+            .domain([+model.params[i].min, +model.params[i].max]);
+
+            xScales[i] = tmp;
+
+            xAxes[i] = d3.svg.axis()
+                .scale(xScales[i])
+                .orient("bottom")
+                .ticks(6);
+        }
 
 
         var color = d3.scale.category20c();
@@ -183,6 +191,10 @@ function plotDensityEstimate(paddedWidth, redraw) {
             var cell = d3.select("#" + paramName);
 
             var paramIndex = model.params.indexOf(param);
+
+            var x = xScales[paramIndex];
+            var xAxis = xAxes[paramIndex];
+
             var y = yScales[paramIndex];
             var yAxis = yAxes[paramIndex];
 
