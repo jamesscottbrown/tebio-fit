@@ -89,6 +89,8 @@ function listEpsilons() {
         })
         .classed("btn", true)
         .classed("btn-default", true)
+        .classed("epsilon-button", true)
+        .style("background-color", function(d,i){ return generationColor(i);})
         .on("click", selectEpsilon);
 }
 

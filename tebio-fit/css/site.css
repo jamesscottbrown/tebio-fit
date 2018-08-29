@@ -39,3 +39,11 @@ circle.not-selected {
   fill-opacity: .125;
   stroke: #fff;
 }
+
+.epsilon-button {
+  font-weight: normal;
+}
+
+.epsilon-button.active {
+  font-weight: bold;
+}
