@@ -8,6 +8,7 @@ function plotDensityEstimate(paddedWidth, redraw) {
     var numParticles = +global_data.particles;
     var weights = [];
 
+    var non_constant_params = model.params.filter(function(d){ return d.type !== "constant" });
 
 
     for (var generation = 1; generation <= numGenerations; generation++) {
@@ -53,19 +54,16 @@ function plotDensityEstimate(paddedWidth, redraw) {
         var dataURL = path + "results_" + modelName + "/Population_" + (generation) + "/data_Population" + (generation) + ".txt";
         var estimate = [];
 
-        var vals = []
-        for (i in model.params){
-            var p = model.params[i];
+        var vals = [];
+        for (i in non_constant_params){
+            var p = non_constant_params[i];
             vals[p.name] = linspace(p.min, p.max, 10);
         }
 
         d3.text(dataURL, function (error, rawData) {
             if (error) throw error;
 
-            var params = model.params.filter(function (x) {
-                    return x.type !== "constant";
-                }),
-                n = params.length;
+            var n = non_constant_params.length;
 
             parsedData = d3.dsv(" ", "text/plain")
                 .parseRows(rawData)
@@ -73,7 +71,7 @@ function plotDensityEstimate(paddedWidth, redraw) {
                     var values = {};
 
                     for (var i = 0; i < n; i++) {
-                        var param = params[i];
+                        var param = non_constant_params[i];
                         values[param.name] = +d[param.column];
 
                         for (var j = 0; j < 10; j++) { // TODO: look at prior
@@ -115,10 +113,10 @@ function plotDensityEstimate(paddedWidth, redraw) {
 
 
         var yScales = [], yAxes = [];
-        for (var i = 0; i < model.params.length; i++) {
+        for (var i = 0; i < non_constant_params.length; i++) {
 
             var densities = densityPoints.filter(function (d) {
-                return d.parameterName === model.params[i].name
+                return d.parameterName === non_constant_params[i].name
             }).map(function (d) {
                 return d.y;
             });
@@ -138,12 +136,12 @@ function plotDensityEstimate(paddedWidth, redraw) {
         }
 
         var xScales = [], xAxes = [];
-        for (var i = 0; i < model.params.length; i++) {
+        for (var i = 0; i < non_constant_params.length; i++) {
 
 
             tmp = d3.scale.linear()
             .range([padding / 2, innerWidth - padding / 2])
-            .domain([+model.params[i].min, +model.params[i].max]);
+            .domain([+non_constant_params[i].min, +non_constant_params[i].max]);
 
             xScales[i] = tmp;
 
@@ -159,13 +157,13 @@ function plotDensityEstimate(paddedWidth, redraw) {
         d3.select("#density").select('svg').remove();
         var svg = d3.select("#density").append('svg')
             .attr("width", paddedWidth)
-            .attr("height", size * model.params.length + padding)
+            .attr("height", size * non_constant_params.length + padding)
             .append("g")
             .attr("transform", "translate(" + padding + "," + padding / 2 + ")");
 
 
         svg.selectAll(".cell")
-            .data(model.params) // TODO: filter out constants ?
+            .data(non_constant_params)
             .enter().append("g")
             .attr("class", "cell")
             // Swapped column order by changing (n - d.i - 1) to (d.i)
@@ -180,7 +178,6 @@ function plotDensityEstimate(paddedWidth, redraw) {
 
         function plot(param) {
 
-         //   var param = model.params.filter(function(d){ return d.name == paramName})[0];
         var paramName = param.name;
 
             // filter to remove other params
@@ -190,7 +187,7 @@ function plotDensityEstimate(paddedWidth, redraw) {
 
             var cell = d3.select("#" + paramName);
 
-            var paramIndex = model.params.indexOf(param);
+            var paramIndex = non_constant_params.indexOf(param);
 
             var x = xScales[paramIndex];
             var xAxis = xAxes[paramIndex];
