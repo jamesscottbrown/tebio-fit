@@ -274,7 +274,8 @@ function plotTimeSeries(i) {
                 .attr("r", 5)
                 .attr("fill", function (d) {
                     return color(d.series);
-                });
+                })
+                .style("visibility", document.getElementById("timeseries_plot_circles").checked ? 'visible' : 'hidden');
 
             points.append("svg:title")
                 .text(function (d, i) {

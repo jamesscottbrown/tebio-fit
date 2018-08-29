@@ -445,6 +445,11 @@
                         <label for="subsampling">Timepoints between each plotted point:</label>
                         <input id="subsampling" name="subsampling" onchange="replotSelectedEpsilon()" value="4"></input>
                     </div>
+                    <div class="form-group">
+                        <label for="timeseries_plot_circles">Draw circles?:</label>
+                        <input id="timeseries_plot_circles" name="timeseries_plot_circles" onchange="d3.select('#timeseries').selectAll('circle').style('visibility', this.checked ? 'visible' : 'hidden')" type="checkbox" checked="true"></input>
+                    </div>
+
                     </form>
 
 
