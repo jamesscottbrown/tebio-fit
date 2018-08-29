@@ -68,6 +68,7 @@ function plotErrors(paddedWidth, redraw){
     // add y-axis and label
     svg.append("g")
         .attr("class", "y distanceplot-axis")
+        .attr("id", "distanceplot-y-axis")
         .attr("transform", "translate(" + padding / 2 + ",0)").call(yAxis);
 
     svg.append("text")
@@ -90,21 +91,6 @@ function plotErrors(paddedWidth, redraw){
     for (var generation = 1; generation <= numGenerations; generation++){
         if (global_data.epsilon_schedule[generation-1] > max_distance ){ continue; }
         processLine(generation);
-
-        // plot reference line
-        var reflineY = y(global_data.epsilon_schedule[generation-1]);
-        svg.append("line")
-            .attr("x1", x(0))
-            .attr("y1", reflineY)
-            .attr("x2", x(numParticles))
-            .attr("y2", reflineY)
-            .attr("stroke", "steelblue")
-            .attr("stroke-width", "1px")
-            .attr("stroke-dasharray", "5,5")
-            .classed("distance-refline", true)
-            .attr("id", "distance-refline-" + (generation-1))
-            .style("stroke", generationColor(generation-1))
-
     }
 
 
@@ -191,8 +177,37 @@ function plotErrors(paddedWidth, redraw){
                     return d;
                 });
 
+                // If all particle errors are < 1/3 of the threshold, adjust scale so to zoom in on the particles
+                // This is partiuclarly useful for first generation of an automatic epsilon schedule
+                if (generation === document.getElementById("max_distance").selectedIndex + 1){
+                    var errors = filteredData.map( function(d){ return d.error } );
+                    var max_error = Math.max.apply(Math, errors);
+                    if (max_error < (max_distance/3)){
+                        y.domain([0, max_error]);
+                    }
+
+                    yAxis.scale(y);
+
+                    d3.select("#distanceplot-y-axis").call(yAxis);
+                }
+
                 // plot
                 plotLine(filteredData, generation);
+
+                // plot reference line
+                var reflineY = y(global_data.epsilon_schedule[generation-1]);
+                svg.append("line")
+                    .attr("x1", x(0))
+                    .attr("y1", reflineY)
+                    .attr("x2", x(numParticles))
+                    .attr("y2", reflineY)
+                    .attr("stroke", "steelblue")
+                    .attr("stroke-width", "1px")
+                    .attr("stroke-dasharray", "5,5")
+                    .classed("distance-refline", true)
+                    .attr("id", "distance-refline-" + (generation-1))
+                    .style("stroke", generationColor(generation-1));
+
             }
         });
 
