@@ -91,7 +91,13 @@ function listEpsilons() {
         .classed("btn-default", true)
         .classed("epsilon-button", true)
         .style("background-color", function(d,i){ return generationColor(i);})
-        .on("click", selectEpsilon);
+        .on("click", selectEpsilon)
+        .on("mouseover", function(d){
+            d3.select("#density").selectAll("circle").classed("unselected", function(d2){ return d2.generation !== global_data.epsilon_schedule.indexOf(d)+1; });
+        })
+        .on("mouseout", function(d){
+            d3.select("#density").selectAll("circle").classed("unselected", false);
+        });
 }
 
 function toggleHistograms(){

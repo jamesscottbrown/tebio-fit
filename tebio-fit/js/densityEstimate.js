@@ -216,6 +216,7 @@ function plotDensityEstimate() {
                 .attr("fill", function (d) {
                     return generationColor(d.generation - 1);
                 })
+                .classed("density-points", true)
                 .style("visibility", document.getElementById("density_plot_circles").checked ? 'visible' : 'hidden');
 
               points.append("svg:title")
