@@ -346,6 +346,12 @@
                         <label for="density_points">Num sample points:</label>
                         <input id="density_points" name="density_points" onchange="plotDensityEstimate()" value="10"></input>
                     </div>
+
+                    <div class="form-group">
+                        <label for="density_plot_circles">Draw circles?:</label>
+                        <input id="density_plot_circles" name="density_plot_circles" onchange="d3.select('#density').selectAll('circle').style('visibility', this.checked ? 'visible' : 'hidden')" type="checkbox" checked="true"></input>
+                    </div>
+
                 </form>
 
 
