@@ -335,6 +335,20 @@
         <div id="graph-concertina-4" class="panel-collapse collapse">
             <div class="panel-body">
                 <div id="density" class="density" style="float: none; margin: 0 auto;"></div>
+
+                <form>
+                    <div class="form-group">
+                        <label for="density_width">Width:</label>
+                        <input id="density_width" name="density_width" onchange="plotDensityEstimate()" value="0.1"></input>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="density_points">Num sample points:</label>
+                        <input id="density_points" name="density_points" onchange="plotDensityEstimate()" value="10"></input>
+                    </div>
+                </form>
+
+
             </div>
 
             <div class="panel panel-default">

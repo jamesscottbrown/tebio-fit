@@ -1,15 +1,28 @@
-    var densityPoints = []; // the actual data we will plot
-
-
-function plotDensityEstimate(paddedWidth, redraw) {
-
+function plotDensityEstimate() {
     var numGenerations = +global_data.epsilon_schedule.length;
     var numModels = +global_data.models.length;
     var numParticles = +global_data.particles;
     var weights = [];
 
+    var processed_generations = [];
+
     var non_constant_params = model.params.filter(function(d){ return d.type !== "constant" });
 
+    var a = +document.getElementById("density_width").value;
+    var num_points = +document.getElementById("density_points").value;
+
+    if (isNaN(a) || a == 0){ a = 0.1; }
+    if (isNaN(num_points) || num_points == 0){ num_points = 10; }
+
+    // Values at which to estimate p.d.f. for each parameter
+    var vals = [];
+    for (i in non_constant_params) {
+        var p = non_constant_params[i];
+        vals[p.name] = linspace(p.min, p.max, num_points);
+    }
+
+
+    var densityPoints = []; // the actual data we will plot
 
     for (var generation = 1; generation <= numGenerations; generation++) {
         if (global_data.epsilon_schedule[generation - 1] > max_distance) {
@@ -54,11 +67,6 @@ function plotDensityEstimate(paddedWidth, redraw) {
         var dataURL = path + "results_" + modelName + "/Population_" + (generation) + "/data_Population" + (generation) + ".txt";
         var estimate = [];
 
-        var vals = [];
-        for (i in non_constant_params){
-            var p = non_constant_params[i];
-            vals[p.name] = linspace(p.min, p.max, 10);
-        }
 
         d3.text(dataURL, function (error, rawData) {
             if (error) throw error;
@@ -74,10 +82,9 @@ function plotDensityEstimate(paddedWidth, redraw) {
                         var param = non_constant_params[i];
                         values[param.name] = +d[param.column];
 
-                        for (var j = 0; j < 10; j++) { // TODO: look at prior
+                        for (var j = 0; j < num_points; j++) {
                             var x = vals[param.name][j] - values[param.name];
-                            if (!estimate[param.name]){ estimate[param.name] = Array(10).fill(0); }
-                            var a = 0.1;
+                            if (!estimate[param.name]){ estimate[param.name] = Array(num_points).fill(0); }
 
                             var contribution = 1/(a * Math.sqrt(Math.PI)) * Math.exp( - Math.pow(x/a, 2) );
                             estimate[param.name][j] += (1/numParticles) * weights[ind] * contribution;
@@ -89,22 +96,20 @@ function plotDensityEstimate(paddedWidth, redraw) {
                 });
 
                     for (p in estimate){
-                        for (var j = 0; j < 10; j++) {
+                        for (var j = 0; j < num_points; j++) {
                             densityPoints.push({ x: vals[p][j], y: estimate[p][j], parameterName: p, generation: generation })
                         }
                     }
 
-
+                    processed_generations.push(generation);
+                    if (processed_generations.length == numGenerations){
+                        draw();
+                    }
         });
-
     }
 
 
     function draw() {
-        var maxVal = 1;
-
-        // TODO: sepearate x-scales
-
         // Build graphic
         var paddedWidth = width,
             size = 230,
